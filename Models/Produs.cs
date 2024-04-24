@@ -7,13 +7,13 @@ namespace Magazin_Online.Models
         [Key]
         public int Id { get; set; }
 
-        public string Denumire {  get; set; }
-        //public CategorieProdus Categorie { get; set; }
-        public float Pret { get; set; }
-        public int NumarBucati { get; set; }
-        public string Descriere { get; set; }
-        public string Imagine { get; set; }
-        //public Orase Orase { get; set; }
+        [Required] public string Denumire {  get; set; }
+        //[Required] public CategorieProdus Categorie { get; set; }
+        [Required] public float Pret { get; set; }
+        [Required] public int NumarBucati { get; set; }
+        [Required] public string Descriere { get; set; }
+        [Required] public string Imagine { get; set; }
+        //[Required] public Orase Orase { get; set; }
 
     }
 }
