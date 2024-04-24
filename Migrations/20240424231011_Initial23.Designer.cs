@@ -4,6 +4,7 @@ using Magazin_Online.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Magazin_Online.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424231011_Initial23")]
+    partial class Initial23
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace Magazin_Online.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ComandaProdus", b =>
+                {
+                    b.Property<int>("ComandaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProdusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ComandaId", "ProdusId");
+
+                    b.HasIndex("ProdusId");
+
+                    b.ToTable("ComandaProdus");
+                });
 
             modelBuilder.Entity("Magazin_Online.Models.Admin", b =>
                 {
@@ -54,13 +72,16 @@ namespace Magazin_Online.Migrations
                     b.Property<int?>("AdminId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AdminId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DataComanda")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NrBuc")
+                    b.Property<int>("Nr_buc")
                         .HasColumnType("int");
 
-                    b.Property<string>("NrComanda")
+                    b.Property<string>("Nr_comanda")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -73,6 +94,8 @@ namespace Magazin_Online.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AdminId");
+
+                    b.HasIndex("AdminId1");
 
                     b.HasIndex("UtilizatorId");
 
@@ -87,7 +110,7 @@ namespace Magazin_Online.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdminId")
+                    b.Property<int?>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<int>("Categorie")
@@ -186,12 +209,31 @@ namespace Magazin_Online.Migrations
                     b.ToTable("Utilizatori");
                 });
 
+            modelBuilder.Entity("ComandaProdus", b =>
+                {
+                    b.HasOne("Magazin_Online.Models.Comanda", null)
+                        .WithMany()
+                        .HasForeignKey("ComandaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Magazin_Online.Models.Produs", null)
+                        .WithMany()
+                        .HasForeignKey("ProdusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Magazin_Online.Models.Comanda", b =>
                 {
                     b.HasOne("Magazin_Online.Models.Admin", "Admin")
-                        .WithMany("Comanda")
+                        .WithMany()
                         .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Magazin_Online.Models.Admin", null)
+                        .WithMany("Comanda")
+                        .HasForeignKey("AdminId1");
 
                     b.HasOne("Magazin_Online.Models.Utilizator", "Utilizator")
                         .WithMany("Comanda")
@@ -209,8 +251,7 @@ namespace Magazin_Online.Migrations
                     b.HasOne("Magazin_Online.Models.Admin", "Admin")
                         .WithMany("Produs")
                         .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Magazin_Online.Models.Utilizator", "Utilizator")
                         .WithMany("Produs")
