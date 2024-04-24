@@ -1,13 +1,6 @@
 ﻿using Magazin_Online.Data.Enums;
 using Magazin_Online.Data;
 using Magazin_Online.Models;
-using MagazinOnline.Data;
-using MagazinOnline.Data.Enums;
-using MagazinOnline.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MagazinOnline.Data
 {
