@@ -1,4 +1,5 @@
 ﻿using Magazin_Online.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Magazin_Online
 {
@@ -13,7 +14,7 @@ namespace Magazin_Online
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>();
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
 
             services.AddControllersWithViews();
         }
