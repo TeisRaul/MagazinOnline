@@ -1,5 +1,6 @@
 ﻿using Magazin_Online.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Magazin_Online.Models
 {
@@ -13,6 +14,14 @@ namespace Magazin_Online.Models
         [Required] public StareComanda StareComanda { get; set; }
 
         public List<ProdusComanda> ProdusComanda { get; set; }
+
+        public int AdminId { get; set; }
+        [ForeignKey("AdminId")]
+        public Admin Admin { get; set; }
+
+        public int UtilizatorId { get; set; }
+        [ForeignKey("UtilizatorId")]
+        public Utilizator Utilizator { get; set; }
 
     }
 }
