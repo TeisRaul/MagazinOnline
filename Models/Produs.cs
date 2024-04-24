@@ -30,5 +30,9 @@ namespace Magazin_Online.Models
         [ForeignKey("AdminId")]
         public Admin Admin { get; set; }
 
+        public int ComandaId { get; set; }
+        [ForeignKey("ComandaId")]
+        public Comanda Comanda { get; set; }
+
     }
 }

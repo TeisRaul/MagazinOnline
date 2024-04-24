@@ -19,8 +19,8 @@ namespace Magazin_Online.Models
         [Required] public string Telefon { get; set; }
 
         //Relationship
-        public List<Comanda> Comenzi { get; set; }
-        public List<Produs> Produse { get; set; }
+        public List<Comanda> Comanda { get; set; }
+        public List<Produs> Produs { get; set; }
 
         public int AdminId { get; set; }
         [ForeignKey("AdminId")]

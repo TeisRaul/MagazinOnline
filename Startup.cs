@@ -14,8 +14,8 @@ namespace Magazin_Online
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString")));
+            //builder.Services.AddDbContext<AppDbContext>(options =>
+               //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
             services.AddControllersWithViews();
         }
 
@@ -31,23 +31,24 @@ namespace Magazin_Online
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            //app.UseHttpsRedirection();
-            //app.UseStaticFiles();
-
-            //app.UseRouting();
-            //app.UseSession();
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseStaticFiles();
+            app.UseSession();
+            app.UseHttpsRedirection();
+            app.UseHsts();
 
             //Authentication & Authorization
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Movies}/{action=Index}/{id?}");
+                    pattern: "{controller=HomeController}/{action=Index}/{id?}");
             });
         }
     }

@@ -13,18 +13,14 @@ namespace Magazin_Online.Models
         //Relationship
 
         //Produs
-        public int ProdusId { get; set; }
-        [ForeignKey("ProdusId")]
-        public Produs Produs { get; set; }
+        public List<Produs> Produs { get; set; }
 
-        //Utilizator
+        //Utilizatori - Un admin poate avea mai mulți utilizatori
+        public List<Utilizator> Utilizator { get; set; }
         public int UtilizatorId { get; set; }
         [ForeignKey("UtilizatorId")]
-        public Utilizator Utilizator { get; set; }
 
-        //Comanda
-        public int ComandaId { get; set; }
-        [ForeignKey("ComandaId")]
-        public Comanda Comanda { get; set; }
+        //Comenzi - Un admin poate avea mai multe comenzi
+        public List<Comanda> Comanda { get; set; }
     }
 }
