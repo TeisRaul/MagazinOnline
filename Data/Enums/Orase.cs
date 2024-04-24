@@ -1,4 +1,4 @@
-﻿namespace Magazin_Online.Models.Data.Enums
+﻿namespace Magazin_Online.Data.Enums
 {
     public enum Orase
     {
