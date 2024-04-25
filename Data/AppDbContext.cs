@@ -7,10 +7,10 @@ namespace Magazin_Online.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Produs> Produse { get; set; }
-        public DbSet<Comanda> Comenzi { get; set; }
-        public DbSet<Utilizator> Utilizatori { get; set; }
-        public DbSet<Admin> Admini { get; set; }
+        public DbSet<Produs> Produs { get; set; }
+        public DbSet<Comanda> Comanda { get; set; }
+        public DbSet<Utilizator> Utilizator { get; set; }
+        public DbSet<Admin> Admin { get; set; }
         public DbSet<ProdusComanda> ProdusComanda { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

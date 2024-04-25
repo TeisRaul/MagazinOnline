@@ -12,24 +12,21 @@ namespace Magazin_Online.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Admini",
+                name: "Admin",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProdusId = table.Column<int>(type: "int", nullable: false),
-                    UtilizatorId = table.Column<int>(type: "int", nullable: false),
-                    ComandaId = table.Column<int>(type: "int", nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Admini", x => x.Id);
+                    table.PrimaryKey("PK_Admin", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Utilizatori",
+                name: "Utilizator",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -45,23 +42,23 @@ namespace Magazin_Online.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Utilizatori", x => x.Id);
+                    table.PrimaryKey("PK_Utilizator", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Utilizatori_Admini_AdminId",
+                        name: "FK_Utilizator_Admin_AdminId",
                         column: x => x.AdminId,
-                        principalTable: "Admini",
+                        principalTable: "Admin",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comenzi",
+                name: "Comanda",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nr_comanda = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Nr_buc = table.Column<int>(type: "int", nullable: false),
+                    NrComanda = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NrBuc = table.Column<int>(type: "int", nullable: false),
                     DataComanda = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StareComanda = table.Column<int>(type: "int", nullable: false),
                     AdminId = table.Column<int>(type: "int", nullable: false),
@@ -69,23 +66,23 @@ namespace Magazin_Online.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comenzi", x => x.Id);
+                    table.PrimaryKey("PK_Comanda", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comenzi_Admini_AdminId",
+                        name: "FK_Comanda_Admin_AdminId",
                         column: x => x.AdminId,
-                        principalTable: "Admini",
+                        principalTable: "Admin",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Comenzi_Utilizatori_UtilizatorId",
+                        name: "FK_Comanda_Utilizator_UtilizatorId",
                         column: x => x.UtilizatorId,
-                        principalTable: "Utilizatori",
+                        principalTable: "Utilizator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Produse",
+                name: "Produs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -93,28 +90,28 @@ namespace Magazin_Online.Migrations
                     Denumire = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Categorie = table.Column<int>(type: "int", nullable: false),
                     Pret = table.Column<float>(type: "real", nullable: false),
-                    NumarBucati = table.Column<int>(type: "int", nullable: false),
-                    Descriere = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Imagine = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Orase = table.Column<int>(type: "int", nullable: false),
-                    UtilizatorId = table.Column<int>(type: "int", nullable: false),
-                    AdminId = table.Column<int>(type: "int", nullable: false)
+                    Descriere = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nr_buc = table.Column<int>(type: "int", nullable: false),
+                    Localitate = table.Column<int>(type: "int", nullable: false),
+                    AdminId = table.Column<int>(type: "int", nullable: false),
+                    UtilizatorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Produse", x => x.Id);
+                    table.PrimaryKey("PK_Produs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Produse_Admini_AdminId",
+                        name: "FK_Produs_Admin_AdminId",
                         column: x => x.AdminId,
-                        principalTable: "Admini",
+                        principalTable: "Admin",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Produse_Utilizatori_UtilizatorId",
+                        name: "FK_Produs_Utilizator_UtilizatorId",
                         column: x => x.UtilizatorId,
-                        principalTable: "Utilizatori",
+                        principalTable: "Utilizator",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,42 +125,37 @@ namespace Magazin_Online.Migrations
                 {
                     table.PrimaryKey("PK_ProdusComanda", x => new { x.ProdusId, x.ComandaId });
                     table.ForeignKey(
-                        name: "FK_ProdusComanda_Comenzi_ComandaId",
+                        name: "FK_ProdusComanda_Comanda_ComandaId",
                         column: x => x.ComandaId,
-                        principalTable: "Comenzi",
+                        principalTable: "Comanda",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProdusComanda_Produse_ProdusId",
+                        name: "FK_ProdusComanda_Produs_ProdusId",
                         column: x => x.ProdusId,
-                        principalTable: "Produse",
+                        principalTable: "Produs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Admini_ComandaId",
-                table: "Admini",
-                column: "ComandaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Admini_ProdusId",
-                table: "Admini",
-                column: "ProdusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Admini_UtilizatorId",
-                table: "Admini",
-                column: "UtilizatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comenzi_AdminId",
-                table: "Comenzi",
+                name: "IX_Comanda_AdminId",
+                table: "Comanda",
                 column: "AdminId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comenzi_UtilizatorId",
-                table: "Comenzi",
+                name: "IX_Comanda_UtilizatorId",
+                table: "Comanda",
+                column: "UtilizatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produs_AdminId",
+                table: "Produs",
+                column: "AdminId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produs_UtilizatorId",
+                table: "Produs",
                 column: "UtilizatorId");
 
             migrationBuilder.CreateIndex(
@@ -172,74 +164,28 @@ namespace Magazin_Online.Migrations
                 column: "ComandaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produse_AdminId",
-                table: "Produse",
+                name: "IX_Utilizator_AdminId",
+                table: "Utilizator",
                 column: "AdminId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Produse_UtilizatorId",
-                table: "Produse",
-                column: "UtilizatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Utilizatori_AdminId",
-                table: "Utilizatori",
-                column: "AdminId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Admini_Comenzi_ComandaId",
-                table: "Admini",
-                column: "ComandaId",
-                principalTable: "Comenzi",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Admini_Produse_ProdusId",
-                table: "Admini",
-                column: "ProdusId",
-                principalTable: "Produse",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Admini_Utilizatori_UtilizatorId",
-                table: "Admini",
-                column: "UtilizatorId",
-                principalTable: "Utilizatori",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Admini_Comenzi_ComandaId",
-                table: "Admini");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Admini_Produse_ProdusId",
-                table: "Admini");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Admini_Utilizatori_UtilizatorId",
-                table: "Admini");
-
             migrationBuilder.DropTable(
                 name: "ProdusComanda");
 
             migrationBuilder.DropTable(
-                name: "Comenzi");
+                name: "Comanda");
 
             migrationBuilder.DropTable(
-                name: "Produse");
+                name: "Produs");
 
             migrationBuilder.DropTable(
-                name: "Utilizatori");
+                name: "Utilizator");
 
             migrationBuilder.DropTable(
-                name: "Admini");
+                name: "Admin");
         }
     }
 }

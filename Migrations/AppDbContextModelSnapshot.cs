@@ -40,7 +40,7 @@ namespace Magazin_Online.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admini");
+                    b.ToTable("Admin", (string)null);
                 });
 
             modelBuilder.Entity("Magazin_Online.Models.Comanda", b =>
@@ -51,7 +51,7 @@ namespace Magazin_Online.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AdminId")
+                    b.Property<int>("AdminId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataComanda")
@@ -76,7 +76,7 @@ namespace Magazin_Online.Migrations
 
                     b.HasIndex("UtilizatorId");
 
-                    b.ToTable("Comenzi");
+                    b.ToTable("Comanda", (string)null);
                 });
 
             modelBuilder.Entity("Magazin_Online.Models.Produs", b =>
@@ -105,10 +105,10 @@ namespace Magazin_Online.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumarBucati")
+                    b.Property<int>("Localitate")
                         .HasColumnType("int");
 
-                    b.Property<int>("Orase")
+                    b.Property<int>("Nr_buc")
                         .HasColumnType("int");
 
                     b.Property<float>("Pret")
@@ -123,7 +123,7 @@ namespace Magazin_Online.Migrations
 
                     b.HasIndex("UtilizatorId");
 
-                    b.ToTable("Produse");
+                    b.ToTable("Produs", (string)null);
                 });
 
             modelBuilder.Entity("Magazin_Online.Models.ProdusComanda", b =>
@@ -138,7 +138,7 @@ namespace Magazin_Online.Migrations
 
                     b.HasIndex("ComandaId");
 
-                    b.ToTable("ProdusComanda");
+                    b.ToTable("ProdusComanda", (string)null);
                 });
 
             modelBuilder.Entity("Magazin_Online.Models.Utilizator", b =>
@@ -183,7 +183,7 @@ namespace Magazin_Online.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Utilizatori");
+                    b.ToTable("Utilizator", (string)null);
                 });
 
             modelBuilder.Entity("Magazin_Online.Models.Comanda", b =>
@@ -191,7 +191,8 @@ namespace Magazin_Online.Migrations
                     b.HasOne("Magazin_Online.Models.Admin", "Admin")
                         .WithMany("Comanda")
                         .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Magazin_Online.Models.Utilizator", "Utilizator")
                         .WithMany("Comanda")

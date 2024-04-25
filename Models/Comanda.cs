@@ -1,4 +1,5 @@
 ﻿using Magazin_Online.Data.Enums;
+using Magazin_Online.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +10,7 @@ namespace Magazin_Online.Models
     public class Comanda
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -23,10 +25,8 @@ namespace Magazin_Online.Models
         [Required]
         public StareComanda StareComanda { get; set; }
 
-        // Relationship
-
         // O comandă poate fi asociată cu un singur Admin
-        public int? AdminId { get; set; }
+        public int AdminId { get; set; }
         [ForeignKey("AdminId")]
         public Admin Admin { get; set; }
 
