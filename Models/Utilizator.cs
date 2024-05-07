@@ -16,13 +16,13 @@ namespace Magazin_Online.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required] public string Nume { get; set; }
-        [Required] public string Prenume { get; set; }
+         public string Nume { get; set; }
+         public string Prenume { get; set; }
         [Required] public string Email { get; set; }
         [Required] public string Parola { get; set; }
-        [Required] public string Adresa { get; set; }
-        [Required] public Orase Oras { get; set; }
-        [Required] public string Telefon { get; set; }
+         public string Adresa { get; set; }
+         public Orase Oras { get; set; }
+         public string Telefon { get; set; }
 
         // Relationship
         public int AdminId { get; set; }
