@@ -53,8 +53,10 @@ namespace Magazin_Online.Controllers
 
         public IActionResult Register()
         {
-            return View();
+            var model = new Utilizator();
+            return View(model);
         }
+
 
         // GET: AccountController/Details/5
         public ActionResult Details(int id)
