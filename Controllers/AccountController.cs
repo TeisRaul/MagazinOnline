@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Magazin_Online.Models; // presupunând că modelul tău de utilizator se numește UserModel
-using System.Linq;
+using Magazin_Online.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Magazin_Online.Data;
 
 namespace Magazin_Online.Controllers
@@ -15,25 +16,26 @@ namespace Magazin_Online.Controllers
             _context = context;
         }
 
-        // GET: AccountController
+        // GET: Account/Index
         public ActionResult Index()
         {
             return View();
         }
 
+        // GET: Account/Login
         public IActionResult Login()
         {
             return View();
         }
 
+        // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(Utilizator model)
+        public ActionResult Login(string email, string password)
         {
             if (ModelState.IsValid)
             {
-                // Verifică dacă există un utilizator cu email-ul și parola introduse
-                var user = _context.Utilizator.FirstOrDefault(u => u.Email == model.Email && u.Parola == model.Parola);
+                var user = _context.Utilizator.FirstOrDefault(u => u.Email == email && u.Parola == password);
 
                 if (user != null)
                 {
@@ -41,36 +43,48 @@ namespace Magazin_Online.Controllers
                 }
                 else
                 {
-                    // Autentificare eșuată, adaugă un mesaj de eroare și afișează din nou pagina de login
                     ModelState.AddModelError("", "Invalid email or password");
-                    return View(model);
+                    return View();
                 }
             }
 
-            // Dacă modelul nu este valid, afișează din nou pagina de login cu erorile corespunzătoare
-            return View(model);
+            return View();
         }
 
+        // GET: Account/Register
         public IActionResult Register()
         {
-            var model = new Utilizator();
+            return View();
+        }
+
+        // POST: Account/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register(Utilizator model)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Utilizator.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
             return View(model);
         }
 
-
-        // GET: AccountController/Details/5
+        // GET: Account/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: AccountController/Create
+        // GET: Account/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: AccountController/Create
+        // POST: Account/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -85,13 +99,13 @@ namespace Magazin_Online.Controllers
             }
         }
 
-        // GET: AccountController/Edit/5
+        // GET: Account/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Edit/5
+        // POST: Account/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -106,13 +120,13 @@ namespace Magazin_Online.Controllers
             }
         }
 
-        // GET: AccountController/Delete/5
+        // GET: Account/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: AccountController/Delete/5
+        // POST: Account/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

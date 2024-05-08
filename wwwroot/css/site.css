@@ -20,16 +20,3 @@ html {
 body {
   margin-bottom: 60px;
 }
-
-.nav-link.btn-success {
-    color: #fff;
-    background-color: #28a745;
-    border-color: black;
-    
-}
-
-    .nav-link.btn-success:hover {
-        color: #fff;
-        background-color: #218838;
-        border-color: black;
-    }

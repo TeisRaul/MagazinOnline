@@ -12,31 +12,31 @@
 
     <div class="form-group">
         <label for="Nume">Nume:</label>
-        <input type="text" class="form-control" id="Nume" name="Nume" value="@Model.Nume" required>
+        <input type="text" class="form-control" id="Nume" name="Nume" value="@(Model?.Nume)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Nume)</span>
     </div>
 
     <div class="form-group">
         <label for="Prenume">Prenume:</label>
-        <input type="text" class="form-control" id="Prenume" name="Prenume" value="@Model.Prenume" required>
+        <input type="text" class="form-control" id="Prenume" name="Prenume" value="@(Model?.Prenume)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Prenume)</span>
     </div>
 
     <div class="form-group">
         <label for="Email">Email:</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required>
+        <input type="email" class="form-control" id="Email" name="Email" value="@(Model?.Email)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Email)</span>
     </div>
 
     <div class="form-group">
         <label for="Parola">Parola:</label>
-        <input type="password" class="form-control" id="Parola" name="Parola" value="@Model.Parola" required>
+        <input type="password" class="form-control" id="Parola" name="Parola" value="@(Model?.Parola)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Parola)</span>
     </div>
 
     <div class="form-group">
         <label for="Adresa">Adresa:</label>
-        <input type="text" class="form-control" id="Adresa" name="Adresa" value="@Model.Adresa" required>
+        <input type="text" class="form-control" id="Adresa" name="Adresa" value="@(Model?.Adresa)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Adresa)</span>
     </div>
 
@@ -54,9 +54,11 @@
 
     <div class="form-group">
         <label for="Telefon">Telefon:</label>
-        <input type="text" class="form-control" id="Telefon" name="Telefon" value="@Model.Telefon" required>
+        <input type="text" class="form-control" id="Telefon" name="Telefon" value="@(Model?.Telefon)" required>
         <span class="text-danger">@Html.ValidationMessageFor(m => m.Telefon)</span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
 </form>
