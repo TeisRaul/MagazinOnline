@@ -22,11 +22,78 @@
     </div>
 </div>
 
-<div>
-    <p>Nume: @Model.Nume</p>
-    <p>Prenume: @Model.Prenume</p>
-    <p>Email: @Model.Email</p>
-    <p>Adresa: @Model.Adresa</p>
-    <p>Oras: @Model.Oras</p>
-    <p>Telefon: @Model.Telefon</p>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Datele mele</h2>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Nume:</dt>
+            <dd class="col-sm-9">@Model.Nume</dd>
+
+            <dt class="col-sm-3">Prenume:</dt>
+            <dd class="col-sm-9">@Model.Prenume</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Adresa:</dt>
+            <dd class="col-sm-9">@Model.Adresa</dd>
+
+            <dt class="col-sm-3">Oras:</dt>
+            <dd class="col-sm-9">@Model.Oras</dd>
+
+            <dt class="col-sm-3">Telefon:</dt>
+            <dd class="col-sm-9">@Model.Telefon</dd>
+        </dl>
+    </div>
+
+    <div class="col-md-6">
+        <h2>Modificări</h2>
+        <hr />
+        <form asp-controller="Account" asp-action="Edit" method="post">
+            <div class="form-group">
+                <label for="inputNume">Nume</label>
+                <input type="text" class="form-control" id="inputNume" name="Nume" value="@Model.Nume">
+            </div>
+            <div class="form-group">
+                <label for="inputPrenume">Prenume</label>
+                <input type="text" class="form-control" id="inputPrenume" name="Prenume" value="@Model.Prenume">
+            </div>
+            <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <input type="email" class="form-control" id="inputEmail" name="Email" value="@Model.Email">
+            </div>
+            <div class="form-group">
+                <label for="inputAdresa">Adresa</label>
+                <input type="text" class="form-control" id="inputAdresa" name="Adresa" value="@Model.Adresa">
+            </div>
+            <div class="form-group">
+                <label for="inputOras">Oras</label>
+                <input type="text" class="form-control" id="inputOras" name="Oras" value="@Model.Oras">
+            </div>
+            <div class="form-group">
+                <label for="inputTelefon">Telefon</label>
+                <input type="text" class="form-control" id="inputTelefon" name="Telefon" value="@Model.Telefon">
+            </div>
+            <button type="submit" class="btn btn-primary">Salvează modificările</button>
+        </form>
+
+        <hr />
+
+        <form asp-controller="Account" asp-action="ChangePassword" method="post">
+            <div class="form-group">
+                <label for="inputPassword">Parola curentă</label>
+                <input type="password" class="form-control" id="inputPassword" name="CurrentPassword">
+            </div>
+            <div class="form-group">
+                <label for="inputNewPassword">Parola nouă</label>
+                <input type="password" class="form-control" id="inputNewPassword" name="NewPassword">
+            </div>
+            <div class="form-group">
+                <label for="inputConfirmPassword">Confirmă parola nouă</label>
+                <input type="password" class="form-control" id="inputConfirmPassword" name="ConfirmPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Schimbă parola</button>
+        </form>
+    </div>
 </div>
