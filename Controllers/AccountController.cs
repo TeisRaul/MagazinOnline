@@ -7,6 +7,7 @@ using Magazin_Online.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Magazin_Online.Controllers
 {
@@ -20,7 +21,7 @@ namespace Magazin_Online.Controllers
         }
 
         // GET: Account/Index
-        public ActionResult Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -38,12 +39,13 @@ namespace Magazin_Online.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _context.Utilizator.FirstOrDefault(u => u.Email == email && u.Parola == password);
+                var user = await _context.Utilizator.FirstOrDefaultAsync(u => u.Email == email && u.Parola == password);
 
                 if (user != null)
                 {
                     var claims = new[]
                     {
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, $"{user.Nume} {user.Prenume}"),
                         new Claim(ClaimTypes.Email, user.Email),
                     };
@@ -65,12 +67,13 @@ namespace Magazin_Online.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid email or password");
-                    return View();
                 }
             }
 
             return View();
         }
+
+
 
         // GET: Account/Register
         public IActionResult Register()
@@ -81,7 +84,7 @@ namespace Magazin_Online.Controllers
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(Utilizator model)
+        public IActionResult Register(Utilizator model)
         {
             if (ModelState.IsValid)
             {
@@ -100,14 +103,47 @@ namespace Magazin_Online.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        // GET: Account/Profile
+        public IActionResult Profile()
+        {
+            var isAuthenticated = HttpContext.Request.Cookies["Authenticated"];
+
+            if (isAuthenticated == "true")
+            {
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
+
+                    if (user != null)
+                    {
+                        return View(user);
+                    }
+                }
+            }
+
+            return RedirectToAction("Login");
+        }
+
+
+        // POST: Account/LogoutOnClose
+        [HttpPost]
+        public IActionResult LogoutOnClose()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
+            HttpContext.Session.Remove("UserId");
+            return Ok();
+        }
+
         // GET: Account/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             return View();
         }
 
         // GET: Account/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -115,7 +151,7 @@ namespace Magazin_Online.Controllers
         // POST: Account/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(IFormCollection collection)
         {
             try
             {
@@ -128,7 +164,7 @@ namespace Magazin_Online.Controllers
         }
 
         // GET: Account/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             return View();
         }
@@ -136,7 +172,7 @@ namespace Magazin_Online.Controllers
         // POST: Account/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -149,7 +185,7 @@ namespace Magazin_Online.Controllers
         }
 
         // GET: Account/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             return View();
         }
@@ -157,7 +193,7 @@ namespace Magazin_Online.Controllers
         // POST: Account/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

@@ -1,6 +1,8 @@
-using Magazin_Online.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Magazin_Online.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +17,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         .AddCookie(options =>
         {
             options.LoginPath = "/Account/Login";
-            options.LogoutPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout"; // Modificat calea de logout
         });
 
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -43,6 +46,21 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Account}/{action=Login}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "home",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "profile",
+        pattern: "{controller=Account}/{action=Profile}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "error",
+        pattern: "Error",
+        new { controller = "Home", action = "Error" });
+
+    endpoints.MapFallbackToController("Error", "Home");
 });
 
 app.Run();

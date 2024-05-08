@@ -16,13 +16,26 @@ namespace Magazin_Online.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required] public string Nume { get; set; }
-        [Required] public string Prenume { get; set; }
-        [Required] public string Email { get; set; }
-        [Required] public string Parola { get; set; }
-        [Required] public string Adresa { get; set; }
-        [Required] public Orase Oras { get; set; }
-        [Required] public string Telefon { get; set; }
+        [Required(ErrorMessage = "Numele este obligatoriu")]
+        public string Nume { get; set; }
+
+        [Required(ErrorMessage = "Prenumele este obligatoriu")]
+        public string Prenume { get; set; }
+
+        [Required(ErrorMessage = "Email-ul este obligatoriu")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Parola este obligatorie")]
+        public string Parola { get; set; }
+
+        [Required(ErrorMessage = "Adresa este obligatorie")]
+        public string Adresa { get; set; }
+
+        [Required(ErrorMessage = "Orasul este obligatoriu")]
+        public Orase Oras { get; set; }
+
+        [Required(ErrorMessage = "Numărul de telefon este obligatoriu")]
+        public string Telefon { get; set; }
 
         // Relationship
         public int AdminId { get; set; }

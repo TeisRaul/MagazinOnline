@@ -38,7 +38,7 @@
                         </ul>
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <span class="navbar-text">Salut, @userName &nbsp;</span>
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile">Salut, @userName</a>
                             </li>
                             <li class="nav-item">
                                 <form id="logoutForm" method="post" asp-area="" asp-controller="Account" asp-action="Logout" class="form-inline">
@@ -63,9 +63,19 @@
             &copy; 2024 - Magazin_Online - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script>
+    window.addEventListener('unload', function (e) {
+        fetch('/Account/LogoutOnClose', {
+            method: 'POST',
+            async: false
+        });
+    });
+</script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
