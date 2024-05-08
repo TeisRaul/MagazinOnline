@@ -136,3 +136,5 @@ C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\obj\Debug\net8.0\Magaz
 C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\obj\Debug\net8.0\Magazin-Online.genruntimeconfig.cache
 C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\obj\Debug\net8.0\ref\Magazin-Online.dll
 C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online\bin\Debug\net8.0\BouncyCastle.Crypto.dll

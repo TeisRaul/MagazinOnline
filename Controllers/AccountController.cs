@@ -106,9 +106,7 @@ namespace Magazin_Online.Controllers
         // GET: Account/Profile
         public IActionResult Profile()
         {
-            var isAuthenticated = HttpContext.Request.Cookies["Authenticated"];
-
-            if (isAuthenticated == "true")
+            if (User.Identity.IsAuthenticated)
             {
                 var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -125,8 +123,92 @@ namespace Magazin_Online.Controllers
 
             return RedirectToAction("Login");
         }
+        // POST : Account/Edit
+        public async Task<IActionResult> Edit(Utilizator model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingUser = await _context.Utilizator.FindAsync(model.Id);
 
+                    if (existingUser != null)
+                    {
+                        existingUser.Nume = model.Nume;
+                        existingUser.Prenume = model.Prenume;
+                        existingUser.Email = model.Email;
+                        existingUser.Adresa = model.Adresa;
+                        existingUser.Oras = model.Oras;
+                        existingUser.Telefon = model.Telefon;
 
+                        _context.Update(existingUser);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction("Profile");
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Tratează excepția aici
+                    return View("Error");
+                }
+            }
+
+            return View(model);
+        }
+
+        // POST: Account/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = await _context.Utilizator.FindAsync(int.Parse(userId));
+
+                    if (user != null)
+                    {
+                        if (user.Parola == currentPassword)
+                        {
+                            if (newPassword == confirmPassword)
+                            {
+                                user.Parola = newPassword;
+                                _context.Update(user);
+                                await _context.SaveChangesAsync();
+
+                                return RedirectToAction("Profile");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Parolele noi nu se potrivesc.");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Parola curentă este incorectă.");
+                        }
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Login");
+                }
+            }
+
+            return View();
+        }
         // POST: Account/LogoutOnClose
         [HttpPost]
         public IActionResult LogoutOnClose()
@@ -162,28 +244,6 @@ namespace Magazin_Online.Controllers
                 return View();
             }
         }
-
-        // GET: Account/Edit/5
-        public IActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Account/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: Account/Delete/5
         public IActionResult Delete(int id)
         {

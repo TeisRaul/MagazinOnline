@@ -44,16 +44,18 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Account}/{action=Login}/{id?}");
+    name: "default",
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
     endpoints.MapControllerRoute(
-        name: "home",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        name: "account",
+        pattern: "Account/{action=Login}/{id?}",
+        defaults: new { controller = "Account", action = "Login" });
 
     endpoints.MapControllerRoute(
-        name: "profile",
-        pattern: "{controller=Account}/{action=Profile}/{id?}");
+        name: "product",
+        pattern: "Product/{action=Index}/{id?}",
+        defaults: new { controller = "Product", action = "Index" });
 
     endpoints.MapControllerRoute(
         name: "error",
@@ -61,6 +63,7 @@ app.UseEndpoints(endpoints =>
         new { controller = "Home", action = "Error" });
 
     endpoints.MapFallbackToController("Error", "Home");
+
 });
 
 app.Run();
