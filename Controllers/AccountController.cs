@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Magazin_Online.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace Magazin_Online.Controllers
 {
@@ -31,7 +34,7 @@ namespace Magazin_Online.Controllers
         // POST: Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             if (ModelState.IsValid)
             {
@@ -39,6 +42,24 @@ namespace Magazin_Online.Controllers
 
                 if (user != null)
                 {
+                    var claims = new[]
+                    {
+                        new Claim(ClaimTypes.Name, $"{user.Nume} {user.Prenume}"),
+                        new Claim(ClaimTypes.Email, user.Email),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        RedirectUri = "/Home/Index"
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -70,6 +91,13 @@ namespace Magazin_Online.Controllers
             }
 
             return View(model);
+        }
+
+        // GET: Account/Logout
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
         }
 
         // GET: Account/Details/5
