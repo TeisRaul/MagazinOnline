@@ -53,9 +53,9 @@ app.UseEndpoints(endpoints =>
         defaults: new { controller = "Account", action = "Login" });
 
     endpoints.MapControllerRoute(
-        name: "product",
-        pattern: "Product/{action=Index}/{id?}",
-        defaults: new { controller = "Product", action = "Index" });
+    name: "addProduct",
+    pattern: "Product/AddProduct/{id?}",
+    defaults: new { controller = "Product", action = "AddProduct" });
 
     endpoints.MapControllerRoute(
         name: "error",

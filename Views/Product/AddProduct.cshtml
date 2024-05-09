@@ -1,0 +1,67 @@
+﻿@model Produs
+@using Magazin_Online.Data.Enums
+
+@{
+    ViewData["Title"] = "Adaugă Produs";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-controller="Product" asp-action="AddProduct" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Denumire">Denumire:</label>
+        <input asp-for="Denumire" class="form-control" />
+        <span asp-validation-for="Denumire" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Categorie">Categorie:</label>
+        <select class="form-control" id="CategorieProdus" name="Categorie" required>
+            <option value="">Selectează categoria</option>
+            @foreach (var categ in Enum.GetValues(typeof(CategorieProdus)))
+            {
+                <option value="@((int)categ)">@categ</option>
+            }
+        </select>
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.Categorie)</span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Pret">Preț:</label>
+        <input asp-for="Pret" class="form-control" />
+        <span asp-validation-for="Pret" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Imagine:</label>
+        <div id="drag-drop-area" class="drop-area">
+            <input type="file" id="file-input" name="file" class="form-control-file" style="display: none;" />
+            <div id="drag-drop-text">Trageți și lăsați fișierele aici sau faceți clic pentru a le selecta.</div>
+        </div>
+        <span asp-validation-for="Imagine" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Descriere">Descriere:</label>
+        <textarea asp-for="Descriere" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Descriere" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Nr_buc">Numărul de bucăți:</label>
+        <input asp-for="Nr_buc" class="form-control" />
+        <span asp-validation-for="Nr_buc" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label for="Oras">Oras:</label>
+        <select class="form-control" id="Oras" name="Oras" required>
+            <option value="">Selectează orașul</option>
+            @foreach (var oras in Enum.GetValues(typeof(Orase)))
+            {
+                <option value="@((int)oras)">@oras</option>
+            }
+        </select>
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.Localitate)</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Adaugă Produs</button>
+</form>

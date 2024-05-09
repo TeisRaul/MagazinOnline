@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Magazin_Online.Controllers
 {
@@ -123,7 +124,9 @@ namespace Magazin_Online.Controllers
 
             return RedirectToAction("Login");
         }
-        // POST : Account/Edit
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Utilizator model)
         {
             if (ModelState.IsValid)
@@ -153,13 +156,14 @@ namespace Magazin_Online.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Tratează excepția aici
                     return View("Error");
                 }
             }
 
-            return View(model);
+            return View("Profile", model);
         }
+
+
 
         // POST: Account/ChangePassword
         [HttpPost]

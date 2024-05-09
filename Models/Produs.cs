@@ -15,13 +15,26 @@ namespace Magazin_Online.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required] public string Denumire { get; set; }
-        [Required] public CategorieProdus Categorie { get; set; }
-        [Required] public float Pret { get; set; }
-        [Required] public string Imagine { get; set; }
-        [Required] public string Descriere { get; set; }
-        [Required] public int Nr_buc { get; set; }
-        [Required] public Orase Localitate { get; set; }
+        [Required(ErrorMessage = "Denumirea produsului este obligatorie.")]
+        public string Denumire { get; set; }
+
+        [Required(ErrorMessage = "Categoria produsului este obligatorie.")]
+        public CategorieProdus Categorie { get; set; }
+
+        [Required(ErrorMessage = "Prețul produsului este obligatoriu.")]
+        public float Pret { get; set; }
+
+        [Required(ErrorMessage = "Imaginea produsului este obligatorie.")]
+        public string Imagine { get; set; }
+
+        [Required(ErrorMessage = "Descrierea produsului este obligatorie.")]
+        public string Descriere { get; set; }
+
+        [Required(ErrorMessage = "Numărul de bucăți este obligatoriu.")]
+        public int Nr_buc { get; set; }
+
+        [Required(ErrorMessage = "Localitatea este obligatorie.")]
+        public Orase Localitate { get; set; }
 
 
         // Relationship

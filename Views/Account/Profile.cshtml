@@ -35,6 +35,7 @@
         <h2>Modificări</h2>
         <hr />
         <form asp-controller="Account" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Nume">Nume</label>
                 <input asp-for="Nume" class="form-control" />

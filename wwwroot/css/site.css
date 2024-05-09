@@ -20,3 +20,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.drag-over {
+    border-color: #333;
+}
+
