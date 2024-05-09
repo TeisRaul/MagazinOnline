@@ -89,13 +89,42 @@ namespace Magazin_Online.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Utilizator.Add(model);
-                _context.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                try
+                {
+                    var existingUser = _context.Utilizator.FirstOrDefault(u => u.Email == model.Email);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Adresa de email este deja înregistrată.");
+                        return View(model);
+                    }
+
+                    _context.Utilizator.Add(model);
+                    _context.SaveChanges();
+
+                    // Afișează un mesaj de depanare în consolă
+                    Console.WriteLine("Utilizatorul a fost înregistrat cu succes!");
+
+                    return RedirectToAction("Login", "Account");
+                }
+                catch (Exception ex)
+                {
+                    // Afișează un mesaj de depanare în consolă
+                    Console.WriteLine("Eroare la salvarea utilizatorului: " + ex.Message);
+
+                    ModelState.AddModelError(string.Empty, "Eroare: " + ex.Message);
+                    return View(model);
+                }
             }
+
+            // Afișează un mesaj de depanare în consolă
+            Console.WriteLine("Datele utilizatorului nu sunt valide.");
 
             return View(model);
         }
+
+
+
+
 
         // GET: Account/Logout
         public async Task<IActionResult> Logout()
