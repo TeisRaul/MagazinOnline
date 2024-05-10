@@ -24,7 +24,6 @@ namespace Magazin_Online.Models
 
         [Required]
         public StareComanda StareComanda { get; set; }
-
         // O comandă poate fi asociată cu un singur Admin
         public int AdminId { get; set; }
         [ForeignKey("AdminId")]

@@ -87,41 +87,36 @@ namespace Magazin_Online.Controllers
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(Utilizator model)
+        public async Task<IActionResult> Register(RegisterVM registerVM)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    var existingUser = _context.Utilizator.FirstOrDefault(u => u.Email == model.Email);
-                    if (existingUser != null)
-                    {
-                        ModelState.AddModelError(string.Empty, "Adresa de email este deja înregistrată.");
-                        return View(model);
-                    }
-
-                    _context.Utilizator.Add(model);
-                    _context.SaveChanges();
-
-                    Console.WriteLine("Utilizatorul a fost înregistrat cu succes!");
-
-                    return RedirectToAction("Login", "Account");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Eroare la salvarea utilizatorului: " + ex.Message);
-
-                    ModelState.AddModelError(string.Empty, "Eroare: " + ex.Message);
-                    return View(model);
-                }
+                return View(registerVM);
             }
 
-            Console.WriteLine("Datele utilizatorului nu sunt valide.");
+            var newUser = new Utilizator
+            {
+                Nume = registerVM.Nume,
+                Prenume = registerVM.Prenume,
+                Email = registerVM.Email,
+                Parola = registerVM.Parola,
+                Adresa = registerVM.Adresa,
+                Oras = registerVM.Oras,
+                Telefon = registerVM.Telefon,
+                AdminId = 1
+            };
 
-            return View(model);
+            _context.Utilizator.Add(newUser);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("RegisterCompleted");
         }
 
-
+        public IActionResult RegisterCompleted()
+        {
+            return View();
+        }
 
 
 

@@ -20,5 +20,14 @@ namespace Magazin_Online.Controllers
             var data = await _context.Produs.Include(n => n.Utilizator).OrderBy(n => n.Denumire).ToListAsync();
             return View(data);
         }
+
+        public IActionResult Detail(int id)
+        {
+            return View();
+        }
+
+        public IActionResult AddProduct() {
+            return View();
+        }
     }
 }
