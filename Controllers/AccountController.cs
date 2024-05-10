@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Magazin_Online.Data;
+using Magazin_Online.Data.Enums;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
@@ -148,43 +149,61 @@ namespace Magazin_Online.Controllers
             return RedirectToAction("Login");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit()
+        { 
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Utilizator model)
         {
-            if (ModelState.IsValid)
+            if (User.Identity.IsAuthenticated)
             {
-                try
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
                 {
-                    var existingUser = await _context.Utilizator.FindAsync(model.Id);
+                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
 
-                    if (existingUser != null)
+                    if (user != null)
                     {
-                        existingUser.Nume = model.Nume;
-                        existingUser.Prenume = model.Prenume;
-                        existingUser.Email = model.Email;
-                        existingUser.Adresa = model.Adresa;
-                        existingUser.Oras = model.Oras;
-                        existingUser.Telefon = model.Telefon;
+                        return View(user);
+                    }
+                }
+            }
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
 
-                        _context.Update(existingUser);
+                    if (user != null)
+                    {
+                        user.Nume = model.Nume;
+                        user.Prenume = model.Prenume;
+                        user.Email = model.Email;
+                        user.Adresa = model.Adresa;
+                        user.Oras = model.Oras;
+                        user.Telefon = model.Telefon;
+
+                        _context.Update(user);
                         await _context.SaveChangesAsync();
 
                         return RedirectToAction("Profile");
                     }
-                    else
-                    {
-                        return NotFound();
-                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    return View("Error");
+                    return NotFound();
                 }
             }
-
-            return View("Profile", model);
+            return View("Profile");
         }
+
+
 
         // POST: Account/ChangePassword
         [HttpPost]
@@ -241,53 +260,6 @@ namespace Magazin_Online.Controllers
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
             HttpContext.Session.Remove("UserId");
             return Ok();
-        }
-
-        // GET: Account/Details/5
-        public IActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Account/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Account/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        // GET: Account/Delete/5
-        public IActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Account/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        }  
     }
 }

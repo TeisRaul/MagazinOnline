@@ -15,29 +15,24 @@
     </div>
     <div class="form-group">
         <label for="Categorie">Categorie:</label>
-        <select class="form-control" id="CategorieProdus" name="Categorie" required>
+        <select class="form-control" asp-for="Categorie" required>
             <option value="">Selectează categoria</option>
             @foreach (var categ in Enum.GetValues(typeof(CategorieProdus)))
             {
-                <option value="@((int)categ)">@categ</option>
+                <option value="@categ">@categ</option>
             }
         </select>
-        <span class="text-danger">@Html.ValidationMessageFor(m => m.Categorie)</span>
+        <span class="text-danger" asp-validation-for="Categorie"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Pret">Preț:</label>
-        <input asp-for="Pret" class="form-control" />
-        <span asp-validation-for="Pret" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Imagine:</label>
+        <label>Imagini:</label>
         <div id="drag-drop-area" class="drop-area">
-            <input type="file" id="file-input" name="file" class="form-control-file" style="display: none;" />
+            <input type="file" id="file-input" name="files" class="form-control-file" multiple style="display: none;" />
             <div id="drag-drop-text">Trageți și lăsați fișierele aici sau faceți clic pentru a le selecta.</div>
         </div>
-        <span asp-validation-for="Imagine" class="text-danger"></span>
+        <div id="preview" class="preview"></div>
+        <span class="text-danger" asp-validation-for="Imagine"></span>
     </div>
 
     <div class="form-group">
@@ -53,15 +48,128 @@
     </div>
     <div class="form-group mb-3">
         <label for="Oras">Oras:</label>
-        <select class="form-control" id="Oras" name="Oras" required>
+        <select class="form-control" asp-for="Localitate" required>
             <option value="">Selectează orașul</option>
             @foreach (var oras in Enum.GetValues(typeof(Orase)))
             {
-                <option value="@((int)oras)">@oras</option>
+                <option value="@oras">@oras</option>
             }
         </select>
-        <span class="text-danger">@Html.ValidationMessageFor(m => m.Localitate)</span>
+        <span class="text-danger" asp-validation-for="Localitate"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Adaugă Produs</button>
 </form>
+
+@section Scripts {
+    <script>
+        const dropArea = document.getElementById('drag-drop-area');
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('preview');
+
+        // Funcție pentru a crea un element imagine cu butoane de acțiune
+        function createImageElement(file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const img = document.createElement('img');
+                img.src = reader.result;
+                img.className = 'preview-image';
+                img.setAttribute('data-name', file.name); // Adăugăm atributul 'data-name' pentru a reține numele fișierului
+
+                // Adăugăm butoane pentru a schimba ordinea și a șterge imaginea
+                const moveUpButton = document.createElement('button');
+                moveUpButton.textContent = '↑';
+                moveUpButton.className = 'move-up-button';
+                moveUpButton.addEventListener('click', () => moveImageUp(img));
+                const moveDownButton = document.createElement('button');
+                moveDownButton.textContent = '↓';
+                moveDownButton.className = 'move-down-button';
+                moveDownButton.addEventListener('click', () => moveImageDown(img));
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Șterge';
+                deleteButton.className = 'delete-button';
+                deleteButton.addEventListener('click', () => deleteImage(img));
+
+                // Creăm un container pentru butoane și imagine
+                const container = document.createElement('div');
+                container.appendChild(moveUpButton);
+                container.appendChild(moveDownButton);
+                container.appendChild(deleteButton);
+                container.appendChild(img);
+
+                preview.appendChild(container);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Funcție pentru a șterge imaginea și butoanele asociate
+        function deleteImage(img) {
+            img.parentNode.remove(); // Ștergem containerul care conține imaginea și butoanele asociate
+            updateFileInput();
+        }
+
+        // Funcție pentru a actualiza input-ul de fișiere
+        function updateFileInput() {
+            const files = [];
+            const images = document.querySelectorAll('.preview-image');
+            images.forEach(img => {
+                const name = img.getAttribute('data-name');
+                const file = new File([name], name, { type: 'image/jpeg' }); // Creăm un obiect File pentru fiecare imagine
+                files.push(file);
+            });
+            const fileList = new DataTransfer();
+            files.forEach(file => fileList.items.add(file));
+            fileInput.files = fileList.files;
+        }
+
+        // Funcție pentru a schimba imaginea în sus
+        function moveImageUp(img) {
+            const prevSibling = img.parentNode.previousElementSibling;
+            if (prevSibling) {
+                preview.insertBefore(img.parentNode, prevSibling);
+                updateFileInput();
+            }
+        }
+
+        // Funcție pentru a schimba imaginea în jos
+        function moveImageDown(img) {
+            const nextSibling = img.parentNode.nextElementSibling;
+            if (nextSibling) {
+                preview.insertBefore(nextSibling, img.parentNode);
+                updateFileInput();
+            }
+        }
+
+        // Eveniment pentru când se face drop în zona de trăgare
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault(); // Previne comportamentul implicit (de exemplu, deschiderea imaginii în tab)
+            dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault(); // Previne comportamentul implicit (de exemplu, deschiderea imaginii în tab)
+            dropArea.classList.remove('dragover');
+
+            const files = event.dataTransfer.files; // Lista de fișiere trase și plasate
+
+            // Iterăm prin fiecare fișier și afișăm o previzualizare
+            Array.from(files).forEach(file => {
+                createImageElement(file);
+            });
+        });
+
+        // Eveniment pentru când se selectează fișiere în input-ul de fișiere
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files; // Lista de fișiere selectate
+
+            // Iterăm prin fiecare fișier și afișăm o previzualizare
+            Array.from(files).forEach(file => {
+                createImageElement(file);
+            });
+        });
+    </script>
+}

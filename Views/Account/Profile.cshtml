@@ -1,4 +1,5 @@
 ﻿@model Magazin_Online.Models.Utilizator
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Profil";
@@ -6,7 +7,7 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-6">
         <h2>Datele mele</h2>
         <hr />
@@ -29,56 +30,9 @@
             <dt class="col-sm-3">Telefon:</dt>
             <dd class="col-sm-9">@Model.Telefon</dd>
         </dl>
-    </div>
 
-    <div class="col-md-6">
-        <h2>Modificări</h2>
-        <hr />
         <form asp-controller="Account" asp-action="Edit" method="post">
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Nume">Nume</label>
-                <input asp-for="Nume" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Prenume">Prenume</label>
-                <input asp-for="Prenume" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Email">Email</label>
-                <input asp-for="Email" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Adresa">Adresa</label>
-                <input asp-for="Adresa" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Oras">Oras</label>
-                <input asp-for="Oras" class="form-control" />
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="Telefon">Telefon</label>
-                <input asp-for="Telefon" class="form-control" />
-            </div>
-            <button type="submit" class="btn btn-primary">Salvează modificările</button>
-        </form>
-
-        <hr />
-
-        <form asp-controller="Account" asp-action="ChangePassword" method="post">
-            <div class="form-group">
-                <label for="currentPassword">Parola curentă</label>
-                <input type="password" class="form-control" id="currentPassword" name="currentPassword">
-            </div>
-            <div class="form-group">
-                <label for="newPassword">Parola nouă</label>
-                <input type="password" class="form-control" id="newPassword" name="newPassword">
-            </div>
-            <div class="form-group mb-3">
-                <label for="confirmPassword">Confirmă parola nouă</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-            </div>
-            <button type="submit" class="btn btn-primary">Schimbă parola</button>
+            <button type="submit" class="btn btn-primary">Editeaza</button>
         </form>
     </div>
 </div>

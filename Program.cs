@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Magazin_Online.Data;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         });
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddSingleton<IFileProvider>(
+    new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
 var app = builder.Build();
 
@@ -58,9 +63,14 @@ app.UseEndpoints(endpoints =>
     defaults: new { controller = "Product", action = "AddProduct" });
 
     endpoints.MapControllerRoute(
-        name: "error",
-        pattern: "Error",
-        new { controller = "Home", action = "Error" });
+       name: "MyProducts",
+       pattern: "Products/MyProducts/{id?}",
+       defaults: new { controller = "Products", action = "MyProducts" });
+
+    endpoints.MapControllerRoute(
+        name: "Edit",
+        pattern: "Account/{action=Edit}/{id?}",
+        defaults: new { controller = "Account", action = "Edit" });
 
     endpoints.MapControllerRoute(
         name: "error",

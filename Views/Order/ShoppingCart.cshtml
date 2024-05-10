@@ -1,0 +1,30 @@
+﻿@* @model List<Magazin_Online.Models.ShoppingCartItem>
+@{
+    ViewData["Title"] = "Cosul meu";
+}
+
+<h1>Coșul meu</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Denumire produs</th>
+            <th>Cantitate</th>
+            <th>Preț unitar</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductId</td>
+                <td>@item.Product.Denumire</td>
+                <td>@item.Quantity</td>
+                <td>@item.Product.Pret</td>
+                <td>@(item.Quantity * item.Product.Pret)</td>
+            </tr>
+        }
+    </tbody>
+</table> *@
