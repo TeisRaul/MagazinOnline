@@ -18,7 +18,7 @@
                                         @item.Denumire
                                         @if (User.Identity.IsAuthenticated)
                                         {
-                                            <a class="text-white float-right" asp-action="Edit" asp-route-id="@item.Id"><i class="bi bi-pencil-square"></i></a>
+                                            <a class="text-white float-right" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i></a>
                                         }
                                     </h5>
                                 </p>
@@ -45,21 +45,17 @@
                                     }
                                 </p>
 
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card-footer ">
-                                <p class="card-text">
-                                    <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">
-                                        <i class="bi bi-eye-fill"></i> Detalii
-                                    </a>
-                                    <a class="btn btn-success text-white"
-                                       asp-controller="Orders"
-                                       asp-action="AddItemToShoppingCart"
-                                       asp-route-id="@item.Id">
-                                        <i class="bi bi-cart-plus"></i> Adauga in cos (@item.Pret.ToString("c") RON)
-                                    </a>
-                                </p>
+                                <form asp-controller="Order" asp-action="AddItemToShoppingCart" method="post">
+                                    <div class="form-group">
+                                        <label for="quantity">Cantitate:</label>
+                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="@item.Nr_buc" required>
+                                    </div>
+                                    <p class="text-danger" id="quantityError" style="display:none;">Cantitatea introdusă depășește stocul disponibil.</p>
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-cart-plus"></i> Adaugă în coș (@item.Pret.ToString("c") RON)
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -72,3 +68,68 @@
         <p>No data available</p>
     }
 </div>
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+        var quantityInput = document.getElementById('quantity');
+        var quantityError = document.getElementById('quantityError');
+        if (parseInt(quantityInput.value) > parseInt(quantityInput.max)) {
+            quantityError.style.display = 'block';
+            event.preventDefault();
+        } else {
+            quantityError.style.display = 'none';
+        }
+    });
+</script>
+
+<div id="cartIcon" style="position: fixed; bottom: 20px; right: 20px;">
+    <a href="#" id="cartIconLink">
+        <i class="bi bi-cart-fill" style="font-size: 2rem;"></i>
+        <span id="cartItemCount" class="badge bg-primary rounded-pill">0</span>
+    </a>
+</div>
+
+<script>
+    $('.add-to-cart-button').on('click', function (event) {
+        event.preventDefault();
+        var formId = $(this).closest('form').attr('id');
+        var productId = $(this).data('product-id');
+        var quantityInput = $('#quantity-' + productId);
+        var quantityError = $('#quantityError-' + productId);
+
+        if (parseInt(quantityInput.val()) > parseInt(quantityInput.attr('max'))) {
+            quantityError.show();
+            return;
+        }
+
+        quantityError.hide();
+        $.ajax({
+            type: 'POST',
+            url: $('#' + formId).attr('action'),
+            data: $('#' + formId).serialize(),
+            success: function (response) {
+                var cartItemCount = parseInt($('#cartItemCount').text());
+                $('#cartItemCount').text(cartItemCount + parseInt(quantityInput.val()));
+
+                var cartIcon = $('#cartIconLink');
+                var productImage = $('#quantity-' + productId).closest('.card').find('img').clone();
+                productImage.css({
+                    'position': 'absolute',
+                    'z-index': '1000',
+                    'height': '100px', 
+                    'width': 'auto',   
+                    'top': productImage.offset().top,
+                    'left': productImage.offset().left
+                });
+                productImage.appendTo('body').animate({
+                    'top': cartIcon.offset().top,
+                    'left': cartIcon.offset().left,
+                    'width': 50,
+                    'height': 50
+                }, 1000, function () {
+                    $(this).remove();
+                });
+            }
+        });
+    });
+</script>

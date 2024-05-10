@@ -29,5 +29,22 @@ namespace Magazin_Online.Controllers
         public IActionResult AddProduct() {
             return View();
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Produs.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
     }
 }

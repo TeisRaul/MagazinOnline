@@ -1,0 +1,46 @@
+﻿@model Produs
+@using Magazin_Online.Data.Enums
+
+@{
+    ViewData["Title"] = "Detalii";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalii produs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-U1nXyTu5BLe2tWW6G2IP4+sI/PtkKlZLxHrZspVLL4Q+npoYJARuSfExyPkMyiiRbjEnVgyLxyGvOwE40lMDTQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container">
+        <h1>Detalii produs</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <img src="@Model.Imagine" class="img-fluid" alt="@Model.Denumire">
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Denumire:</dt>
+                    <dd class="col-sm-8">@Model.Denumire</dd>
+
+                    <dt class="col-sm-4">Descriere:</dt>
+                    <dd class="col-sm-8">@Model.Descriere</dd>
+
+                    <dt class="col-sm-4">Preț:</dt>
+                    <dd class="col-sm-8">@Model.Pret.ToString() RON</dd>
+
+                    <dt class="col-sm-4">Numar de bucati ramase in stock:</dt>
+                    <dd class="col-sm-8">@Model.Nr_buc</dd>
+
+                    <dt class="col-sm-4">Localitate:</dt>
+                    <dd class="col-sm-8">@Model.Localitate</dd>
+
+                </dl>
+                <a href="@Url.Action("Index", "Product")" class="btn btn-primary">Înapoi la lista de produse</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

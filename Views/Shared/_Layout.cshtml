@@ -49,6 +49,12 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="Order" asp-action="ShoppingCart">
+                                    <i class="bi bi-cart-fill"></i> Coș
+                                    <span id="cartItemCount" class="badge bg-primary">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="AddProduct">Adaugă Produs</a>
                             </li>
                             <li class="nav-item">

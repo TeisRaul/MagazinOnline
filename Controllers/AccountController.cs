@@ -186,8 +186,6 @@ namespace Magazin_Online.Controllers
             return View("Profile", model);
         }
 
-
-
         // POST: Account/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]

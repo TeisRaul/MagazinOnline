@@ -10,7 +10,7 @@ namespace Magazin_Online.Models
         [Key]
         public int Id { get; set; }
 
-        public Produs Produs { get; set; }
+        public List<Produs> Produs { get; set; }
         public int Cantitate { get; set; }
 
 
