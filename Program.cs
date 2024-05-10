@@ -17,7 +17,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         .AddCookie(options =>
         {
             options.LoginPath = "/Account/Login";
-            options.LogoutPath = "/Account/Logout"; // Modificat calea de logout
+            options.LogoutPath = "/Account/Logout";
         });
 
 builder.Services.AddHttpContextAccessor();
@@ -56,6 +56,11 @@ app.UseEndpoints(endpoints =>
     name: "addProduct",
     pattern: "Product/AddProduct/{id?}",
     defaults: new { controller = "Product", action = "AddProduct" });
+
+    endpoints.MapControllerRoute(
+        name: "error",
+        pattern: "Error",
+        new { controller = "Home", action = "Error" });
 
     endpoints.MapControllerRoute(
         name: "error",

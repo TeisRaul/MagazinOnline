@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Magazin_Online.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,8 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
-
+using System;
+using System.Collections.Generic;
 namespace Magazin_Online.Controllers
 {
     public class AccountController : Controller
@@ -55,7 +57,7 @@ namespace Magazin_Online.Controllers
                     var authProperties = new AuthenticationProperties
                     {
                         IsPersistent = true,
-                        RedirectUri = "/Home/Index"
+                        RedirectUri = "/Home/Product"
                     };
 
                     await HttpContext.SignInAsync(
@@ -63,7 +65,7 @@ namespace Magazin_Online.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
                 }
                 else
                 {
@@ -101,14 +103,12 @@ namespace Magazin_Online.Controllers
                     _context.Utilizator.Add(model);
                     _context.SaveChanges();
 
-                    // Afișează un mesaj de depanare în consolă
                     Console.WriteLine("Utilizatorul a fost înregistrat cu succes!");
 
                     return RedirectToAction("Login", "Account");
                 }
                 catch (Exception ex)
                 {
-                    // Afișează un mesaj de depanare în consolă
                     Console.WriteLine("Eroare la salvarea utilizatorului: " + ex.Message);
 
                     ModelState.AddModelError(string.Empty, "Eroare: " + ex.Message);
@@ -116,7 +116,6 @@ namespace Magazin_Online.Controllers
                 }
             }
 
-            // Afișează un mesaj de depanare în consolă
             Console.WriteLine("Datele utilizatorului nu sunt valide.");
 
             return View(model);

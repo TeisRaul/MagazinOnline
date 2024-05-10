@@ -1,24 +1,22 @@
 ﻿using Magazin_Online.Data;
-using Magazin_Online.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Magazin_Online.Controllers
 {
-    public class ProductController : Controller
+    public class OrderController : Controller
     {
         private readonly AppDbContext _context;
 
-        public ProductController(AppDbContext context)
+        public OrderController(AppDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var data = await _context.Produs.Include(n => n.Utilizator).OrderBy(n => n.Denumire).ToListAsync();
-            return View(data);
+            var data = await _context.Comanda.ToListAsync();
+            return View();
         }
     }
 }
