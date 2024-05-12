@@ -1,30 +1,44 @@
-﻿@* @model List<Magazin_Online.Models.ShoppingCartItem>
-@{
-    ViewData["Title"] = "Cosul meu";
+﻿@model List<Produs>
+
+<h1>Coș de cumpărături</h1>
+
+@if (Model.Count == 0)
+{
+    <p>Coșul de cumpărături este gol.</p>
 }
-
-<h1>Coșul meu</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Denumire produs</th>
-            <th>Cantitate</th>
-            <th>Preț unitar</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ProductId</td>
-                <td>@item.Product.Denumire</td>
-                <td>@item.Quantity</td>
-                <td>@item.Product.Pret</td>
-                <td>@(item.Quantity * item.Product.Pret)</td>
-            </tr>
-        }
-    </tbody>
-</table> *@
+else
+{
+    <form id="updateCartForm" method="post" asp-controller="Order" asp-action="UpdateCart">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nume</th>
+                    <th>Preț</th>
+                    <th>Cantitate</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var produs in Model)
+                {
+                    <tr>
+                        <td>@produs.Denumire</td>
+                        <td>@produs.Pret</td>
+                        <td>
+                            <input type="number" class="form-control" name="quantities[@produs.Id]" value="@produs.Nr_buc" min="1" />
+                        </td>
+                        <td>@(produs.Pret * produs.Nr_buc)</td>
+                        <td>
+                            <button class="btn btn-danger" name="productId" value="@produs.Id" formaction="@Url.Action("RemoveFromCart", "Order")">Șterge</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Actualizează coșul</button>
+            <a href="@Url.Action("FinalizeOrder", "Order")" class="btn btn-success">Finalizează comanda</a>
+        </div>
+    </form>
+}

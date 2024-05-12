@@ -12,7 +12,6 @@
     <title>@ViewData["Title"] - Magazin_Online</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
@@ -43,7 +42,7 @@
                                     Salut, @userName
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Profile">Profilul meu</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Edit">Profilul meu</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="MyOrders">Comenzile mele</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="MyProducts">Produsele mele</a></li>
                                 </ul>
@@ -51,7 +50,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Order" asp-action="ShoppingCart">
                                     <i class="bi bi-cart-fill"></i> Coș
-                                    <span id="cartItemCount" class="badge bg-primary">0</span>
+                                    <span id="cartItemCount" class="badge bg-primary"></span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -79,14 +78,13 @@
             &copy; 2024 - Magazin_Online - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script>
-    window.addEventListener('unload', function (e) {
-        fetch('/Account/LogoutOnClose', {
-            method: 'POST',
-            async: false
-        });
-    });
-</script>
+
+    <div id="cartIcon" style="position: fixed; bottom: 20px; right: 20px;">
+        <a href="#" id="cartIconLink">
+            <i class="bi bi-cart-fill" style="font-size: 2rem;"></i>
+            <span id="cartItemCount" class="badge bg-primary"></span>
+        </a>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -94,3 +92,45 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    $(document).ready(function () {
+        updateCartItemCount();
+    });
+
+    $('.add-to-cart-button').on('click', function (event) {
+        event.preventDefault();
+        var formId = $(this).closest('form').attr('id');
+        var productId = $(this).data('product-id');
+        var quantityInput = $('#quantity-' + productId);
+        var quantityError = $('#quantityError-' + productId);
+
+        if (parseInt(quantityInput.val()) > parseInt(quantityInput.attr('max'))) {
+            quantityError.show();
+            return;
+        }
+
+        quantityError.hide();
+        $.ajax({
+            type: 'POST',
+            url: $('#' + formId).attr('action'),
+            data: $('#' + formId).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    updateCartItemCount(response.cartItemCount);
+                    alert("Produsul a fost adăugat în coș."); // Afișăm un mesaj de confirmare
+                } else {
+                    alert("A apărut o eroare: " + response.message);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert("A apărut o eroare: " + xhr.responseText);
+            }
+        });
+    });
+
+    function updateCartItemCount(cartItemCount) {
+        $('#cartItemCount').text(cartItemCount);
+    }
+</script>
+

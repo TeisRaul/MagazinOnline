@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using Magazin_Online.Data.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Magazin_Online.Controllers
 {
     public class AccountController : Controller
@@ -148,61 +151,57 @@ namespace Magazin_Online.Controllers
 
             return RedirectToAction("Login");
         }
-
         [HttpGet]
         public async Task<IActionResult> Edit()
-        { 
-            return View();
+        {
+            // Obține utilizatorul curent autentificat
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                // Dacă utilizatorul nu este autentificat, redirectionează la pagina de autentificare
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await _context.Utilizator.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            if (user == null)
+            {
+                // Dacă nu există utilizatorul în baza de date, returnează un cod de eroare
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Utilizator model)
+        public async Task<IActionResult> Edit(Utilizator utilizator)
         {
-            if (User.Identity.IsAuthenticated)
+            if (ModelState.IsValid)
             {
-                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (!string.IsNullOrEmpty(userId))
+                try
                 {
-                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
+                    var existingUser = await _context.Utilizator.FindAsync(utilizator.Id);
 
-                    if (user != null)
-                    {
-                        return View(user);
-                    }
+                    existingUser.Nume = utilizator.Nume;
+                    existingUser.Prenume = utilizator.Prenume;
+                    existingUser.Email = utilizator.Email;
+                    existingUser.Adresa = utilizator.Adresa;
+                    existingUser.Oras = utilizator.Oras;
+                    existingUser.Telefon = utilizator.Telefon;
+
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = "Datele utilizatorului au fost actualizate cu succes.";
+                    return RedirectToAction("Edit");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    ModelState.AddModelError("", "Actualizarea datelor a eșuat. Te rugăm să încerci din nou.");
                 }
             }
-            if (User.Identity.IsAuthenticated)
-            {
-                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
 
-                    if (user != null)
-                    {
-                        user.Nume = model.Nume;
-                        user.Prenume = model.Prenume;
-                        user.Email = model.Email;
-                        user.Adresa = model.Adresa;
-                        user.Oras = model.Oras;
-                        user.Telefon = model.Telefon;
-
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
-
-                        return RedirectToAction("Profile");
-                    }
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            return View("Profile");
+            return View(utilizator);
         }
-
 
 
         // POST: Account/ChangePassword

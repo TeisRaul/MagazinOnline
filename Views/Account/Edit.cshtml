@@ -4,36 +4,10 @@
 @{
     ViewData["Title"] = "Edit";
 }
-    <div class="col-md-6">
-        <h2>Datele mele</h2>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-3">Nume:</dt>
-            <dd class="col-sm-9">@Model.Nume</dd>
 
-            <dt class="col-sm-3">Prenume:</dt>
-            <dd class="col-sm-9">@Model.Prenume</dd>
+<h1>@ViewData["Title"]</h1>
 
-            <dt class="col-sm-3">Email:</dt>
-            <dd class="col-sm-9">@Model.Email</dd>
-
-            <dt class="col-sm-3">Adresa:</dt>
-            <dd class="col-sm-9">@Model.Adresa</dd>
-
-            <dt class="col-sm-3">Oras:</dt>
-            <dd class="col-sm-9">@Model.Oras</dd>
-
-            <dt class="col-sm-3">Telefon:</dt>
-            <dd class="col-sm-9">@Model.Telefon</dd>
-        </dl>
-
-        <form asp-controller="Account" asp-action="Edit" method="post">
-            <button type="submit" class="btn btn-primary">Editează</button>
-        </form>
-    </div>
-<div class="col-md-6">
-    <h2>Modificări</h2>
-    <hr />
+<div class="row justify-content-center">
     <form asp-controller="Account" asp-action="Edit" method="post">
         <input type="hidden" asp-for="Id" />
 
@@ -54,8 +28,14 @@
             <input asp-for="Adresa" class="form-control" />
         </div>
         <div class="form-group">
-            <label asp-for="Oras">Oras</label>
-            <input asp-for="Oras" class="form-control" />
+            <label for="Oras">Oras</label>
+            <select asp-for="Oras" class="form-control">
+                <option value="">Selectează orasul</option>
+                @foreach (var oras in Enum.GetValues(typeof(Magazin_Online.Data.Enums.Orase)))
+                {
+                    <option value="@((int)oras)">@oras</option>
+                }
+            </select>
         </div>
         <div class="form-group mb-3">
             <label asp-for="Telefon">Telefon</label>
@@ -63,21 +43,22 @@
         </div>
         <button type="submit" class="btn btn-primary">Salvează modificările</button>
     </form>
-
-    <form asp-controller="Account" asp-action="ChangePassword" method="post">
-        <div class="form-group">
-            <label for="currentPassword">Parola curentă</label>
-            <input type="password" class="form-control" id="currentPassword" name="currentPassword">
-        </div>
-        <div class="form-group">
-            <label for="newPassword">Parola nouă</label>
-            <input type="password" class="form-control" id="newPassword" name="newPassword">
-        </div>
-        <div class="form-group mb-3">
-            <label for="confirmPassword">Confirmă parola nouă</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-        </div>
-        <button type="submit" class="btn btn-primary">Schimbă parola</button>
-    </form>
+    </div>
+</div>
+<form asp-controller="Account" asp-action="ChangePassword" method="post">
+    <div class="form-group">
+        <label for="currentPassword">Parola curentă</label>
+        <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+    </div>
+    <div class="form-group">
+        <label for="newPassword">Parola nouă</label>
+        <input type="password" class="form-control" id="newPassword" name="newPassword">
+    </div>
+    <div class="form-group mb-3">
+        <label for="confirmPassword">Confirmă parola nouă</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+    </div>
+    <button type="submit" class="btn btn-primary">Schimbă parola</button>
+</form>
 </div>
 </div>

@@ -1,6 +1,9 @@
 ﻿using Magazin_Online.Data;
+using Magazin_Online.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Magazin_Online.Controllers
 {
@@ -19,31 +22,112 @@ namespace Magazin_Online.Controllers
             return View();
         }
 
-        //public async Task<IActionResult> ShoppingCart()
-        //{
-        //    var cartItems = await _context.ShoppingCartItem.ToListAsync();
+        public List<Produs> GetCartItems()
+        {
+            var cart = HttpContext.Session.GetString("Cart");
 
-        //    // Pentru fiecare element din coș, adăugăm informațiile despre produs
-        //    foreach (var item in cartItems)
-        //    {
-        //        // Obținem informațiile despre produs folosind ProductId
-        //        var product = await _context.Produs.FindAsync(item.ProductId);
+            if (string.IsNullOrEmpty(cart))
+            {
+                return new List<Produs>();
+            }
+            else
+            {
+                return JsonConvert.DeserializeObject<List<Produs>>(cart);
+            }
+        }
+        public async Task<IActionResult> ShoppingCart()
+        {
+            var cartItems = GetCartItems(); 
+            return View(cartItems);
+        }
 
-        //        // Dacă găsim produsul, îl adăugăm în ShoppingCartItem
-        //        if (product != null)
-        //        {
-        //            item.Produs = product;
-        //        }
-        //    }
+        [HttpPost]
+        public IActionResult AddItemToShoppingCart(int productId, int quantity)
+        {
+            var product = _context.Produs.Find(productId);
 
-        //    // Calculăm numărul total de produse din coș
-        //    var cartItemsCount = cartItems.Sum(item => item.Quantity);
+            if (product == null)
+            {
+                return NotFound();
+            }
 
-        //    // Adăugăm numărul de produse în ViewBag pentru a fi accesat în View
-        //    ViewBag.CartItemCount = cartItemsCount;
+            if (quantity > product.Nr_buc)
+            {
+                TempData["ErrorMessage"] = "Cantitatea introdusă depășește stocul disponibil.";
+                return RedirectToAction("ShoppingCart");
+            }
 
-        //    return View(cartItems);
-        //}
+            var cart = HttpContext.Session.Get<List<Produs>>("Cart") ?? new List<Produs>();
+
+            cart.Add(new Produs
+            {
+                Id = product.Id,
+                Denumire = product.Denumire,
+                Pret = product.Pret,
+                Nr_buc = quantity
+            });
+
+            HttpContext.Session.Set("Cart", cart);
+
+            return RedirectToAction("ShoppingCart");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveFromCart(int productId)
+        {
+            var cart = HttpContext.Session.Get<List<Produs>>("Cart") ?? new List<Produs>();
+            var productToRemove = cart.FirstOrDefault(p => p.Id == productId);
+
+            if (productToRemove != null)
+            {
+                cart.Remove(productToRemove);
+                HttpContext.Session.Set("Cart", cart);
+
+                // Incrementăm cantitatea disponibilă în baza de date
+                var product = _context.Produs.Find(productId);
+                product.Nr_buc += productToRemove.Nr_buc;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("ShoppingCart");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateCart(Dictionary<int, int> quantities)
+        {
+            var cart = HttpContext.Session.Get<List<Produs>>("Cart") ?? new List<Produs>();
+
+            foreach (var (productId, quantity) in quantities)
+            {
+                var productInCart = cart.FirstOrDefault(p => p.Id == productId);
+                if (productInCart != null)
+                {
+                    var product = _context.Produs.Find(productId);
+                    var oldQuantity = productInCart.Nr_buc;
+                    var newQuantity = quantity;
+
+                    if (newQuantity > oldQuantity)
+                    {
+                        var difference = newQuantity - oldQuantity;
+                        if (difference <= product.Nr_buc)
+                        {
+                            product.Nr_buc -= difference;
+                            productInCart.Nr_buc = newQuantity;
+                        }
+                    }
+                    else if (newQuantity < oldQuantity)
+                    {
+                        var difference = oldQuantity - newQuantity;
+                        product.Nr_buc += difference;
+                        productInCart.Nr_buc = newQuantity;
+                    }
+                }
+            }
+
+            _context.SaveChanges();
+            HttpContext.Session.Set("Cart", cart);
+            return RedirectToAction("ShoppingCart");
+        }
 
 
     }
