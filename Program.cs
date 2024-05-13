@@ -21,6 +21,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddHttpContextAccessor();
+
+
 builder.Services.AddSingleton<IFileProvider>(
     new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
@@ -50,6 +53,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.UseEndpoints(endpoints =>
 {

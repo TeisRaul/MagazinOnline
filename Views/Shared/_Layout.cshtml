@@ -1,20 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
     var userName = User.Identity?.Name;
 }
 @{
-    string backgroundColor = Context.Session.GetString("BackgroundColor") ?? "white";
-    string fontFamily = Context.Session.GetString("FontFamily") ?? "Arial";
+    var backgroundColor = Context.Session.GetString("BackgroundColor") ?? "#ffffff";
+    var fontFamily = Context.Session.GetString("FontFamily") ?? "Arial";
 }
 
-
-<style>
-    body {
-        background-color: @backgroundColor;
-        font-family: @fontFamily;
-    }
-</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +23,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <style>
+        body {
+            background-color: @backgroundColor;
+            font-family: @fontFamily, sans-serif;
+        }
+    </style>
 </head>
 <body>
     <header>
