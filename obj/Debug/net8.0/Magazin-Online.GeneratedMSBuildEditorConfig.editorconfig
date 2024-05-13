@@ -26,26 +26,6 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\A\Desktop\Sem2\MTP\Magazin-Online\Magazin-Online
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Account/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Account/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Account/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Account/RegisterCompleted.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3RlckNvbXBsZXRlZC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Account/Test.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxUZXN0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Admin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -66,24 +46,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Comandas/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tYW5kYXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Comandas/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tYW5kYXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Comandas/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tYW5kYXNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Comandas/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tYW5kYXNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Comandas/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tYW5kYXNcSW5kZXguY3NodG1s
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Home/Help.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxIZWxwLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Home/Index.cshtml]
@@ -92,6 +56,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Order/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Order/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Order/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Order/MyOrders.cshtml]
@@ -106,12 +82,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBZGRQcm9kdWN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Product/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Product/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Product/EditProduct.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxFZGl0UHJvZHVjdC5jc2h0bWw=
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Product/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Product/Index.cshtml]
@@ -130,10 +110,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxDcmVhdGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -146,8 +122,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxJbmRleC5jc2h0bWw=
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/RegisterCompleted.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxSZWdpc3RlckNvbXBsZXRlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/Utilizator/Test.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXRpbGl6YXRvclxUZXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/A/Desktop/Sem2/MTP/Magazin-Online/Magazin-Online/Views/_ViewImports.cshtml]

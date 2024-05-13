@@ -245,6 +245,14 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\uploads\\laptop.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\laptop.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\uploads\\tv.jpeg",
+      "PackagePath": "staticwebassets\\uploads\\tv.jpeg"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Magazin-Online.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

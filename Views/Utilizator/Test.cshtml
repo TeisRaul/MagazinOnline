@@ -1,4 +1,4 @@
-﻿@model Magazin_Online.Data.ViewModels.EditVM
+﻿@model Magazin_Online.Models.Utilizator
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,22 +7,11 @@
 
 <h4>Utilizator</h4>
 <hr />
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        <p><strong>Atenție:</strong> Unele câmpuri nu au fost completate corect:</p>
-        <ul>
-            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <li>@modelError.ErrorMessage</li>
-            }
-        </ul>
-    </div>
-}
 <div class="row">
     <div class="col-md-6">
-        <form asp-controller="Utilizator" asp-action="Edit" class="form-control">
+        <form asp-action="Edit" class="form-control">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" class="form-control" />
             <div class="form-group mr-3">
                 <label asp-for="Nume" class="control-label mr-1"></label>
                 <input asp-for="Nume" class="form-control" />
@@ -62,7 +51,7 @@
         </form>
     </div>
 </div>
-<form asp-controller="Utilizator" asp-action="ChangePassword" method="post" class="form-control">
+<form asp-controller="Account" asp-action="ChangePassword" method="post" class="form-control">
     <div class="form-group mr-3">
         <label for="currentPassword" class="control-label mr-1">Parola curentă:</label>
         <input type="password" class="form-control" id="currentPassword" name="currentPassword">

@@ -16,13 +16,15 @@ using System.Collections.Generic;
 using System.Data;
 using Magazin_Online.Data.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 namespace Magazin_Online.Controllers
 {
-    public class AccountController : Controller
+    public class UtilizatorController : Controller
     {
         private readonly AppDbContext _context;
 
-        public AccountController(AppDbContext context)
+        public UtilizatorController(AppDbContext context)
         {
             _context = context;
         }
@@ -80,8 +82,6 @@ namespace Magazin_Online.Controllers
             return View();
         }
 
-
-
         // GET: Account/Register
         public IActionResult Register()
         {
@@ -122,87 +122,103 @@ namespace Magazin_Online.Controllers
             return View();
         }
 
-
-
         // GET: Account/Logout
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "Utilizator");
         }
 
-        // GET: Account/Profile
-        public IActionResult Profile()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    var user = _context.Utilizator.FirstOrDefault(u => u.Id.ToString() == userId);
-
-                    if (user != null)
-                    {
-                        return View(user);
-                    }
-                }
-            }
-
-            return RedirectToAction("Login");
-        }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit()
         {
-            // Obține utilizatorul curent autentificat
-            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
             {
-                // Dacă utilizatorul nu este autentificat, redirectionează la pagina de autentificare
-                return RedirectToAction("Login", "Account");
+                return View("Error");
             }
 
-            var user = await _context.Utilizator.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
+            var user = await _context.Utilizator.FindAsync(int.Parse(userId));
             if (user == null)
             {
-                // Dacă nu există utilizatorul în baza de date, returnează un cod de eroare
-                return NotFound();
+                return View("Error");
             }
 
-            return View(user);
+            var editVM = new EditVM()
+            {
+                Nume = user.Nume,
+                Prenume = user.Prenume,
+                Email = user.Email,
+                Adresa = user.Adresa,
+                Oras = user.Oras,
+                Telefon = user.Telefon,
+            };
+
+            return View(editVM);
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Utilizator utilizator)
+        public async Task<IActionResult> Edit(EditVM editVM)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    var existingUser = await _context.Utilizator.FindAsync(utilizator.Id);
-
-                    existingUser.Nume = utilizator.Nume;
-                    existingUser.Prenume = utilizator.Prenume;
-                    existingUser.Email = utilizator.Email;
-                    existingUser.Adresa = utilizator.Adresa;
-                    existingUser.Oras = utilizator.Oras;
-                    existingUser.Telefon = utilizator.Telefon;
-
-                    await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Datele utilizatorului au fost actualizate cu succes.";
-                    return RedirectToAction("Edit");
+                    Debug.WriteLine(error.ErrorMessage);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    ModelState.AddModelError("", "Actualizarea datelor a eșuat. Te rugăm să încerci din nou.");
-                }
+                return View("Edit", editVM);
             }
 
-            return View(utilizator);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return View("Error");
+            }
+
+            var user = await _context.Utilizator.FindAsync(int.Parse(userId));
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            if (int.Parse(userId) != user.Id)
+            {
+                return Forbid();
+            }
+
+            user.Nume = editVM.Nume;
+            user.Prenume = editVM.Prenume;
+            user.Email = editVM.Email;
+            user.Adresa = editVM.Adresa;
+            user.Oras = editVM.Oras;
+            user.Telefon = editVM.Telefon;
+
+            try
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Edit));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UtilizatorExists(user.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
+        private bool UtilizatorExists(int id)
+        {
+            return _context.Utilizator.Any(e => e.Id == id);
+        }
 
         // POST: Account/ChangePassword
         [HttpPost]
@@ -227,7 +243,7 @@ namespace Magazin_Online.Controllers
                                 _context.Update(user);
                                 await _context.SaveChangesAsync();
 
-                                return RedirectToAction("Profile");
+                                return RedirectToAction("Edit");
                             }
                             else
                             {

@@ -10,11 +10,14 @@ namespace Magazin_Online.Models
         [Required(ErrorMessage = "Denumirea produsului este obligatorie")]
         public string Denumire { get; set; }
 
+        [Required(ErrorMessage = "Imaginea produsului este obligatorie")]
+        public IFormFile Imagine { get; set; }
+
         [Required(ErrorMessage = "Categorie este obligatorie")]
         public CategorieProdus Categorie { get; set; }
 
         [Required(ErrorMessage = "Prețul este obligatoriu")]
-        public decimal Pret { get; set; }
+        public float Pret { get; set; }
 
         [Required(ErrorMessage = "Descrierea este obligatorie")]
         public string Descriere { get; set; }
@@ -24,8 +27,5 @@ namespace Magazin_Online.Models
 
         [Required(ErrorMessage = "Localitatea este obligatorie")]
         public Orase Localitate { get; set; }
-
-        // Adăugăm un câmp pentru imagine
-        public string Imagine { get; set; }
     }
 }

@@ -28,12 +28,14 @@
     <div class="form-group">
         <label>Imagini:</label>
         <div id="drag-drop-area" class="drop-area">
-            <input type="file" id="file-input" name="files" class="form-control-file" multiple style="display: none;" />
-            <div id="drag-drop-text">Trageți și lăsați fișierele aici sau faceți clic pentru a le selecta.</div>
+            <div id="drag-drop-text">Trageți și lăsați fișierele aici.</div>
         </div>
+        <input type="file" id="file-input" name="file" class="form-control-file" style="display: none;" />
         <div id="preview" class="preview"></div>
         <span class="text-danger" asp-validation-for="Imagine"></span>
     </div>
+
+    <input type="hidden" id="hidden-uri" name="imageURI" />
 
     <div class="form-group">
         <label asp-for="Descriere">Descriere:</label>
@@ -66,34 +68,31 @@
         const dropArea = document.getElementById('drag-drop-area');
         const fileInput = document.getElementById('file-input');
         const preview = document.getElementById('preview');
+        const hiddenUriInput = document.getElementById('hidden-uri');
 
-        // Funcție pentru a crea un element imagine cu butoane de acțiune
         function createImageElement(file) {
             const reader = new FileReader();
             reader.onload = () => {
                 const img = document.createElement('img');
                 img.src = reader.result;
                 img.className = 'preview-image';
-                img.setAttribute('data-name', file.name); // Adăugăm atributul 'data-name' pentru a reține numele fișierului
+                img.setAttribute('data-name', file.name);
 
-                // Adăugăm butoane pentru a schimba ordinea și a șterge imaginea
-                const moveUpButton = document.createElement('button');
-                moveUpButton.textContent = '↑';
-                moveUpButton.className = 'move-up-button';
-                moveUpButton.addEventListener('click', () => moveImageUp(img));
-                const moveDownButton = document.createElement('button');
-                moveDownButton.textContent = '↓';
-                moveDownButton.className = 'move-down-button';
-                moveDownButton.addEventListener('click', () => moveImageDown(img));
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Șterge';
                 deleteButton.className = 'delete-button';
+                deleteButton.style.color = 'white';
+                deleteButton.style.backgroundColor = 'red';
+                deleteButton.style.border = 'none';
+                deleteButton.style.padding = '5px 10px';
+                deleteButton.style.borderRadius = '5px';
+                deleteButton.style.marginRight = '5px';
+                deleteButton.style.cursor = 'pointer';
                 deleteButton.addEventListener('click', () => deleteImage(img));
 
-                // Creăm un container pentru butoane și imagine
                 const container = document.createElement('div');
-                container.appendChild(moveUpButton);
-                container.appendChild(moveDownButton);
+                container.style.display = 'flex';
+                container.style.alignItems = 'center';
                 container.appendChild(deleteButton);
                 container.appendChild(img);
 
@@ -102,47 +101,32 @@
             reader.readAsDataURL(file);
         }
 
-        // Funcție pentru a șterge imaginea și butoanele asociate
         function deleteImage(img) {
-            img.parentNode.remove(); // Ștergem containerul care conține imaginea și butoanele asociate
+            img.parentNode.remove();
             updateFileInput();
         }
 
-        // Funcție pentru a actualiza input-ul de fișiere
         function updateFileInput() {
             const files = [];
             const images = document.querySelectorAll('.preview-image');
             images.forEach(img => {
                 const name = img.getAttribute('data-name');
-                const file = new File([name], name, { type: 'image/jpeg' }); // Creăm un obiect File pentru fiecare imagine
+                const file = new File([name], name, { type: 'image/jpeg' });
                 files.push(file);
             });
             const fileList = new DataTransfer();
             files.forEach(file => fileList.items.add(file));
             fileInput.files = fileList.files;
-        }
 
-        // Funcție pentru a schimba imaginea în sus
-        function moveImageUp(img) {
-            const prevSibling = img.parentNode.previousElementSibling;
-            if (prevSibling) {
-                preview.insertBefore(img.parentNode, prevSibling);
-                updateFileInput();
+            if (images.length > 0) {
+                hiddenUriInput.value = images[0].src;
+            } else {
+                hiddenUriInput.value = '';
             }
         }
 
-        // Funcție pentru a schimba imaginea în jos
-        function moveImageDown(img) {
-            const nextSibling = img.parentNode.nextElementSibling;
-            if (nextSibling) {
-                preview.insertBefore(nextSibling, img.parentNode);
-                updateFileInput();
-            }
-        }
-
-        // Eveniment pentru când se face drop în zona de trăgare
         dropArea.addEventListener('dragover', (event) => {
-            event.preventDefault(); // Previne comportamentul implicit (de exemplu, deschiderea imaginii în tab)
+            event.preventDefault();
             dropArea.classList.add('dragover');
         });
 
@@ -151,22 +135,19 @@
         });
 
         dropArea.addEventListener('drop', (event) => {
-            event.preventDefault(); // Previne comportamentul implicit (de exemplu, deschiderea imaginii în tab)
+            event.preventDefault();
             dropArea.classList.remove('dragover');
 
-            const files = event.dataTransfer.files; // Lista de fișiere trase și plasate
+            const files = event.dataTransfer.files;
 
-            // Iterăm prin fiecare fișier și afișăm o previzualizare
             Array.from(files).forEach(file => {
                 createImageElement(file);
             });
         });
 
-        // Eveniment pentru când se selectează fișiere în input-ul de fișiere
         fileInput.addEventListener('change', (event) => {
-            const files = event.target.files; // Lista de fișiere selectate
+            const files = event.target.files;
 
-            // Iterăm prin fiecare fișier și afișăm o previzualizare
             Array.from(files).forEach(file => {
                 createImageElement(file);
             });

@@ -1,6 +1,7 @@
-using Magazin_Online.Models;
+using Magazin_Online.Data.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+
 
 namespace Magazin_Online.Controllers
 {
@@ -19,6 +20,11 @@ namespace Magazin_Online.Controllers
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Help()
         {
             return View();
         }

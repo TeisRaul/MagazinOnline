@@ -83,9 +83,7 @@ namespace Magazin_Online.Controllers
                 cart.Remove(productToRemove);
                 HttpContext.Session.Set("Cart", cart);
 
-                // Incrementăm cantitatea disponibilă în baza de date
                 var product = _context.Produs.Find(productId);
-                product.Nr_buc += productToRemove.Nr_buc;
                 _context.SaveChanges();
             }
 

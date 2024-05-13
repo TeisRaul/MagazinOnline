@@ -1,4 +1,4 @@
-namespace Magazin_Online.Models
+namespace Magazin_Online.Data.ViewModels
 {
     public class ErrorViewModel
     {

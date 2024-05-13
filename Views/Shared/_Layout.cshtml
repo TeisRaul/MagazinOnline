@@ -3,6 +3,18 @@
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
     var userName = User.Identity?.Name;
 }
+@{
+    string backgroundColor = Context.Session.GetString("BackgroundColor") ?? "white";
+    string fontFamily = Context.Session.GetString("FontFamily") ?? "Arial";
+}
+
+
+<style>
+    body {
+        background-color: @backgroundColor;
+        font-family: @fontFamily;
+    }
+</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +25,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
 </head>
 <body>
     <header>
@@ -30,10 +47,13 @@
                                 <a class="nav-link font-weight-bold text-dark h4" asp-area="" asp-controller="Product" asp-action="Index">MagazinOnline</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Acasa</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Politica de Confidențialitate</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Help">Suport</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav">
@@ -42,7 +62,7 @@
                                     Salut, @userName
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Edit">Profilul meu</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Utilizator" asp-action="Edit">Profilul meu</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="MyOrders">Comenzile mele</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="MyProducts">Produsele mele</a></li>
                                 </ul>
@@ -57,7 +77,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="AddProduct">Adaugă Produs</a>
                             </li>
                             <li class="nav-item">
-                                <form id="logoutForm" method="post" asp-area="" asp-controller="Account" asp-action="Logout" class="form-inline">
+                                <form id="logoutForm" method="post" asp-area="" asp-controller="Utilizator" asp-action="Logout" class="form-inline">
                                     <button type="submit" class="btn btn-danger btn-block">Logout</button>
                                 </form>
                             </li>
@@ -77,60 +97,37 @@
         <div class="container">
             &copy; 2024 - Magazin_Online - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
+        <div id="colorPicker" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background-color: #007bff; color: white; text-align: center; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="bi bi-palette" style="font-size: 24px;"></i>
+        </div>
+
+        <div id="colorPanel" style="position: fixed; bottom: 20px; right: 20px; width: 200px; background-color: white; border: 1px solid #ccc; border-radius: 5px; display: none; padding: 10px;">
+            <h5>Selectați culorile și fontul:</h5>
+            <form id="colorForm" method="post" asp-area="" asp-controller="Style" asp-action="ChangeColors">
+                <div class="form-group">
+                    <label for="backgroundColor">Culoare fundal:</label>
+                    <input type="color" id="backgroundColor" name="backgroundColor" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="fontFamily">Font:</label>
+                    <select id="fontFamily" name="fontFamily" class="form-control">
+                        <option value="Arial" selected=@(fontFamily == "Arial" ? "selected" : "")>Arial</option>
+                        <option value="Times New Roman" selected=@(fontFamily == "Times New Roman" ? "selected" : "")>Times New Roman</option>
+                        <option value="Verdana" selected=@(fontFamily == "Verdana" ? "selected" : "")>Verdana</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Salvează</button>
+            </form>
+        </div>
     </footer>
-
-    <div id="cartIcon" style="position: fixed; bottom: 20px; right: 20px;">
-        <a href="#" id="cartIconLink">
-            <i class="bi bi-cart-fill" style="font-size: 2rem;"></i>
-            <span id="cartItemCount" class="badge bg-primary"></span>
-        </a>
-    </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+</div>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
 <script>
     $(document).ready(function () {
-        updateCartItemCount();
-    });
-
-    $('.add-to-cart-button').on('click', function (event) {
-        event.preventDefault();
-        var formId = $(this).closest('form').attr('id');
-        var productId = $(this).data('product-id');
-        var quantityInput = $('#quantity-' + productId);
-        var quantityError = $('#quantityError-' + productId);
-
-        if (parseInt(quantityInput.val()) > parseInt(quantityInput.attr('max'))) {
-            quantityError.show();
-            return;
-        }
-
-        quantityError.hide();
-        $.ajax({
-            type: 'POST',
-            url: $('#' + formId).attr('action'),
-            data: $('#' + formId).serialize(),
-            success: function (response) {
-                if (response.success) {
-                    updateCartItemCount(response.cartItemCount);
-                    alert("Produsul a fost adăugat în coș."); // Afișăm un mesaj de confirmare
-                } else {
-                    alert("A apărut o eroare: " + response.message);
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                alert("A apărut o eroare: " + xhr.responseText);
-            }
+        $('#colorPicker').click(function () {
+            $('#colorPanel').toggle();
         });
     });
-
-    function updateCartItemCount(cartItemCount) {
-        $('#cartItemCount').text(cartItemCount);
-    }
 </script>
-

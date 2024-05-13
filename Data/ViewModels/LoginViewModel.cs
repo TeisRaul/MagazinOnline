@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Magazin_Online.Models
+namespace Magazin_Online.Data.ViewModels
 {
     public class LoginViewModel
     {

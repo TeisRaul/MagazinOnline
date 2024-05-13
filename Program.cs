@@ -12,8 +12,6 @@ builder.Services.AddSession();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {
@@ -26,6 +24,13 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IFileProvider>(
     new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -50,12 +55,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
-
-    endpoints.MapControllerRoute(
-        name: "account",
-        pattern: "Account/{action=Login}/{id?}",
-        defaults: new { controller = "Account", action = "Login" });
+    pattern: "{controller=Utilizator}/{action=Login}");
 
     endpoints.MapControllerRoute(
     name: "addProduct",
@@ -67,7 +67,10 @@ app.UseEndpoints(endpoints =>
        pattern: "Products/MyProducts/{id?}",
        defaults: new { controller = "Products", action = "MyProducts" });
 
-
+    endpoints.MapControllerRoute(
+        name: "Profil",
+        pattern: "Utilizator/Edit/{id?}",
+        defaults: new { controller = "Utilizator", action = "Edit" });
 
     endpoints.MapControllerRoute(
         name: "error",

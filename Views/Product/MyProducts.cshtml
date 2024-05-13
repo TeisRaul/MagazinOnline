@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Magazin_Online.Models.Produs>
 
 @{
-    ViewData["Title"] = "My Products";
+    ViewData["Title"] = "Produsele mele";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -20,8 +20,8 @@
                     <p class="card-text"><strong>Localitate:</strong> @product.Localitate</p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary" asp-controller="Order" asp-action="AddItemToShoppingCart">Edit</a>
-                    <a href="#" class="btn btn-danger" asp-controller="Order" asp-action="AddItemToShoppingCart">Delete</a>
+                    <a class="btn btn-primary" asp-controller="Product" asp-action="Edit">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Product" asp-action="Delete">Delete</a>
                 </div>
             </div>
         </div>

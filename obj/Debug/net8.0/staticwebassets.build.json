@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ECHWx/j9xwJ8Jt+GT1jSLejyKvzyTYH/mfRgjUPgYGQ=",
+  "Hash": "dKE9MZNGuIYPEP0vO3KsDU4rq8Ev6cPAiu9jkJrFbmQ=",
   "Source": "Magazin-Online",
   "BasePath": "_content/Magazin-Online",
   "Mode": "Default",
@@ -1193,6 +1193,44 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\uploads\\laptop.jpeg",
+      "SourceId": "Magazin-Online",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\",
+      "BasePath": "_content/Magazin-Online",
+      "RelativePath": "uploads/laptop.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\laptop.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\uploads\\tv.jpeg",
+      "SourceId": "Magazin-Online",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\A\\Desktop\\Sem2\\MTP\\Magazin-Online\\Magazin-Online\\wwwroot\\",
+      "BasePath": "_content/Magazin-Online",
+      "RelativePath": "uploads/tv.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\tv.jpeg"
     }
   ]
 }
