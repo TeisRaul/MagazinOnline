@@ -1,4 +1,4 @@
-﻿@model Produs
+﻿@model Magazin_Online.Data.ViewModels.ProdusVM
 @using Magazin_Online.Data.Enums
 
 @{
@@ -30,12 +30,10 @@
         <div id="drag-drop-area" class="drop-area">
             <div id="drag-drop-text">Trageți și lăsați fișierele aici.</div>
         </div>
-        <input type="file" id="file-input" name="file" class="form-control-file" style="display: none;" />
+        <input asp-for="ImageFile" type="file" id="file-input" name="ImageFile" class="form-control-file" style="display: none;" />
         <div id="preview" class="preview"></div>
-        <span class="text-danger" asp-validation-for="Imagine"></span>
+        <span class="text-danger" asp-validation-for="ImageFile"></span>
     </div>
-
-    <input type="hidden" id="hidden-uri" name="imageURI" />
 
     <div class="form-group">
         <label asp-for="Descriere">Descriere:</label>
@@ -68,7 +66,6 @@
         const dropArea = document.getElementById('drag-drop-area');
         const fileInput = document.getElementById('file-input');
         const preview = document.getElementById('preview');
-        const hiddenUriInput = document.getElementById('hidden-uri');
 
         function createImageElement(file) {
             const reader = new FileReader();
@@ -117,12 +114,6 @@
             const fileList = new DataTransfer();
             files.forEach(file => fileList.items.add(file));
             fileInput.files = fileList.files;
-
-            if (images.length > 0) {
-                hiddenUriInput.value = images[0].src;
-            } else {
-                hiddenUriInput.value = '';
-            }
         }
 
         dropArea.addEventListener('dragover', (event) => {

@@ -1,7 +1,7 @@
 ﻿using Magazin_Online.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Magazin_Online.Models
+namespace Magazin_Online.Data.ViewModels
 {
     public class ProdusVM
     {
@@ -10,10 +10,7 @@ namespace Magazin_Online.Models
         [Required(ErrorMessage = "Denumirea produsului este obligatorie")]
         public string Denumire { get; set; }
 
-        [Required(ErrorMessage = "Imaginea produsului este obligatorie")]
-        public IFormFile Imagine { get; set; }
-
-        [Required(ErrorMessage = "Categorie este obligatorie")]
+        [Required(ErrorMessage = "Categoria produsului este obligatorie")]
         public CategorieProdus Categorie { get; set; }
 
         [Required(ErrorMessage = "Prețul este obligatoriu")]
@@ -27,5 +24,10 @@ namespace Magazin_Online.Models
 
         [Required(ErrorMessage = "Localitatea este obligatorie")]
         public Orase Localitate { get; set; }
+
+        public string Imagine { get; set; }
+
+        [Required(ErrorMessage = "Imaginea este obligatorie")]
+        public IFormFile ImageFile { get; set; }
     }
 }

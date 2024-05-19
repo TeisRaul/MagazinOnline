@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<Magazin_Online.Models.Comanda>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Orders";
 }
 
-<h1>Index</h1>
+<h1>My Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order Number</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
     <tbody>
         @foreach (var item in Model)
         {
@@ -22,15 +33,7 @@
                     @Html.DisplayFor(modelItem => item.StareComanda)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Admin.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Utilizator.Adresa)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-primary" asp-controller="Order" asp-action="Details" asp-route-nrComanda="@item.NrComanda">Detalii</a>
                 </td>
             </tr>
         }

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
+using Microsoft.Data.SqlClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Magazin_Online.Controllers
 {
@@ -25,11 +27,42 @@ namespace Magazin_Online.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            var data = await _context.Produs.Include(n => n.Utilizator).OrderBy(n => n.Denumire).ToListAsync();
-            return View(data);
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["NameSortParam"] = System.String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var produse = _context.Produs
+                .Include(p => p.Utilizator)
+                .AsQueryable();
+
+            if (!System.String.IsNullOrEmpty(searchString))
+            {
+                produse = produse.Where(p => p.Denumire.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    produse = produse.OrderBy(p => p.Denumire);
+                    break;
+                case "name_desc":
+                    produse = produse.OrderByDescending(p => p.Denumire);
+                    break;
+                case "price_asc":
+                    produse = produse.OrderBy(p => p.Pret);
+                    break;
+                case "price_desc":
+                    produse = produse.OrderByDescending(p => p.Pret);
+                    break;
+                default:
+                    produse = produse.OrderBy(p => p.Denumire);
+                    break;
+            }
+
+            return View(await produse.AsNoTracking().ToListAsync());
         }
+
 
         public IActionResult Detail(int id)
         {
@@ -38,39 +71,52 @@ namespace Magazin_Online.Controllers
 
         public IActionResult AddProduct()
         {
-            ViewData["UtilizatorId"] = new SelectList(_context.Utilizator, "Id", "Email");
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(Produs produs, IFormFile file)
+        public async Task<IActionResult> AddProduct(ProdusVM produsVM)
         {
             if (ModelState.IsValid)
             {
-                if (file == null || file.Length == 0)
-                {
-                    ModelState.AddModelError("", "Trebuie să încărcați o imagine.");
-                    return View(produs);
-                }
-
                 try
                 {
-                    if (file.ContentType.ToLower().StartsWith("image/"))
+                    if (produsVM.ImageFile == null || produsVM.ImageFile.Length == 0)
                     {
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        var filePath = Path.Combine(_hostEnvironment.WebRootPath, "uploads", fileName);
+                        ModelState.AddModelError("", "Trebuie să încărcați o imagine.");
+                        return View(produsVM);
+                    }
 
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-                        produs.Imagine = "/uploads/" + fileName;
-                    }
-                    else
+                    if (!produsVM.ImageFile.ContentType.ToLower().StartsWith("image/"))
                     {
-                        ModelState.AddModelError("", "Formatul fișierului trebuie să fie de tip imagine.");
-                        return View(produs);
+                        ModelState.AddModelError("", "Fișierul trebuie să fie o imagine.");
+                        return View(produsVM);
                     }
+
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(produsVM.ImageFile.FileName);
+                    var filePath = Path.Combine(_hostEnvironment.WebRootPath, "uploads", fileName);
+
+
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await produsVM.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    produsVM.Imagine = "/uploads/" + fileName;
+
+                    var produs = new Produs
+                    {
+                        Denumire = produsVM.Denumire,
+                        Categorie = produsVM.Categorie,
+                        Pret = produsVM.Pret,
+                        Descriere = produsVM.Descriere,
+                        Nr_buc = produsVM.Nr_buc,
+                        Localitate = produsVM.Localitate,
+                        Imagine = produsVM.Imagine,
+                    };
 
                     _context.Add(produs);
                     await _context.SaveChangesAsync();
@@ -83,8 +129,11 @@ namespace Magazin_Online.Controllers
                 }
             }
 
-            return View(produs);
+            return View(produsVM);
         }
+
+
+
 
         public async Task<IActionResult> Details(int? id)
         {

@@ -10,9 +10,33 @@
 
     .product-image {
         max-height: 200px;
-        object-fit: cover; 
+        object-fit: cover;
     }
 </style>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <form method="get">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Caută..." name="searchString">
+                <button class="btn btn-outline-secondary" type="submit">Caută</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-12 mb-3">
+        <div class="dropdown sort-dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Sortează
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="?sortOrder=name_asc">Sortează după nume (ascendent)</a></li>
+                <li><a class="dropdown-item" href="?sortOrder=name_desc">Sortează după nume (descendent)</a></li>
+                <li><a class="dropdown-item" href="?sortOrder=price_asc">Sortează după preț (ascendent)</a></li>
+                <li><a class="dropdown-item" href="?sortOrder=price_desc">Sortează după preț (descendent)</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     @if (Model != null)
@@ -77,23 +101,4 @@
         <p>No data available</p>
     }
 </div>
-
-<script>
-    document.querySelector('form').addEventListener('submit', function (event) {
-        var quantityInput = document.getElementById('quantity');
-        var quantityError = document.getElementById('quantityError');
-        if (parseInt(quantityInput.value) > parseInt(quantityInput.max)) {
-            quantityError.style.display = 'block';
-            event.preventDefault();
-        } else {
-            quantityError.style.display = 'none';
-        }
-    });
-</script>
-
-<div id="cartIcon" style="position: fixed; bottom: 20px; right: 20px;">
-    <a href="#" id="cartIconLink">
-        <i class="bi bi-cart-fill" style="font-size: 2rem;"></i>
-        <span id="cartItemCount" class="badge bg-primary rounded-pill">0</span>
-    </a>
 </div>

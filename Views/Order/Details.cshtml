@@ -4,51 +4,68 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Order Details</h1>
 
 <div>
-    <h4>Comanda</h4>
+    <h4>Order</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NrComanda)
+        <dt class="col-sm-2">
+            Numarul Comenzii
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NrComanda)
+        <dd class="col-sm-10">
+            @Model.NrComanda
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NrBuc)
+        <dt class="col-sm-2">
+            Nr. bucati
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NrBuc)
+        <dd class="col-sm-10">
+            @Model.NrBuc
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataComanda)
+        <dt class="col-sm-2">
+            Data comenzii
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataComanda)
+        <dd class="col-sm-10">
+            @Model.DataComanda
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StareComanda)
+        <dt class="col-sm-2">
+            Status
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StareComanda)
+        <dd class="col-sm-10">
+            @Model.StareComanda
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Admin)
+        <dt class="col-sm-2">
+            Adresa
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Admin.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Utilizator)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Utilizator.Adresa)
+        <dd class="col-sm-10">
+            @Model.Utilizator.Adresa
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <h4>Produse Comandate</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produs</th>
+                <th>Cantitate</th>
+                <th>Pret</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ProdusComanda)
+            {
+                <tr>
+                    <td>@item.Produs.Denumire</td>
+                    <td>@item.Cantitate</td>
+                    <td>@item.Pret</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a class="btn btn-primary" asp-controller="Order" asp-action="MyOrders">Inapoi la comenzi</a>
 </div>
