@@ -26,9 +26,9 @@
     </div>
 
     <div class="form-group">
-        <label>Imagini:</label>
+        <label>Imagine:</label>
         <div id="drag-drop-area" class="drop-area">
-            <div id="drag-drop-text">Trageți și lăsați fișierele aici.</div>
+            <div id="drag-drop-text">Trageți și lăsați fișierul aici.</div>
         </div>
         <input asp-for="ImageFile" type="file" id="file-input" name="ImageFile" class="form-control-file" style="display: none;" />
         <div id="preview" class="preview"></div>
@@ -46,6 +46,11 @@
         <input asp-for="Nr_buc" class="form-control" />
         <span asp-validation-for="Nr_buc" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="Pret">Pret:</label>
+        <input asp-for="Pret" class="form-control" />
+        <span asp-validation-for="Pret" class="text-danger"></span>
+    </div>
     <div class="form-group mb-3">
         <label for="Oras">Oras:</label>
         <select class="form-control" asp-for="Localitate" required>
@@ -58,14 +63,15 @@
         <span class="text-danger" asp-validation-for="Localitate"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Adaugă Produs</button>
+    <button type="submit" class="btn btn-primary" asp-controller="Product" asp-action="AddProduct">Adaugă Produs</button>
 </form>
 
 @section Scripts {
     <script>
-        const dropArea = document.getElementById('drag-drop-area');
         const fileInput = document.getElementById('file-input');
+        const dropArea = document.getElementById('drag-drop-area');
         const preview = document.getElementById('preview');
+        let fileList = [];
 
         function createImageElement(file) {
             const reader = new FileReader();
@@ -73,6 +79,7 @@
                 const img = document.createElement('img');
                 img.src = reader.result;
                 img.className = 'preview-image';
+                img.style.width = '100px';  // Adjust size as needed
                 img.setAttribute('data-name', file.name);
 
                 const deleteButton = document.createElement('button');
@@ -83,9 +90,8 @@
                 deleteButton.style.border = 'none';
                 deleteButton.style.padding = '5px 10px';
                 deleteButton.style.borderRadius = '5px';
-                deleteButton.style.marginRight = '5px';
                 deleteButton.style.cursor = 'pointer';
-                deleteButton.addEventListener('click', () => deleteImage(img));
+                deleteButton.addEventListener('click', () => deleteImage(file.name, img));
 
                 const container = document.createElement('div');
                 container.style.display = 'flex';
@@ -98,22 +104,16 @@
             reader.readAsDataURL(file);
         }
 
-        function deleteImage(img) {
-            img.parentNode.remove();
+        function deleteImage(fileName, imgElement) {
+            fileList = fileList.filter(file => file.name !== fileName);
+            imgElement.parentNode.remove();
             updateFileInput();
         }
 
         function updateFileInput() {
-            const files = [];
-            const images = document.querySelectorAll('.preview-image');
-            images.forEach(img => {
-                const name = img.getAttribute('data-name');
-                const file = new File([name], name, { type: 'image/jpeg' });
-                files.push(file);
-            });
-            const fileList = new DataTransfer();
-            files.forEach(file => fileList.items.add(file));
-            fileInput.files = fileList.files;
+            const dataTransfer = new DataTransfer();
+            fileList.forEach(file => dataTransfer.items.add(file));
+            fileInput.files = dataTransfer.files;
         }
 
         dropArea.addEventListener('dragover', (event) => {
@@ -128,20 +128,63 @@
         dropArea.addEventListener('drop', (event) => {
             event.preventDefault();
             dropArea.classList.remove('dragover');
-
-            const files = event.dataTransfer.files;
-
-            Array.from(files).forEach(file => {
+            const files = Array.from(event.dataTransfer.files);
+            if (files.length > 1) {
+                alert("Puteți încărca doar o singură imagine.");
+                return;
+            }
+            fileList.push(...files);
+            files.forEach(file => {
                 createImageElement(file);
             });
+            updateFileInput();
         });
 
         fileInput.addEventListener('change', (event) => {
-            const files = event.target.files;
-
-            Array.from(files).forEach(file => {
+            const files = Array.from(event.target.files);
+            if (files.length > 1) {
+                alert("Puteți încărca doar o singură imagine.");
+                return;
+            }
+            fileList.push(...files);
+            files.forEach(file => {
                 createImageElement(file);
             });
+            updateFileInput();
         });
     </script>
 }
+
+<style>
+    .drop-area {
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .dragover {
+        background-color: #f0f0f0;
+    }
+
+    .preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .preview-image {
+        max-width: 100px;
+        max-height: 100px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .delete-button {
+        margin-right: 5px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+</style>

@@ -1,83 +1,69 @@
 ﻿@model IEnumerable<Produs>
+
 @{
     ViewData["Title"] = "Produse";
 }
 
 <style>
     .product-card {
-        height: 100%;
+        max-width: 900px; /* Lățimea maximă a cartonașului */
+        margin-bottom: 20px;
     }
 
     .product-image {
-        max-height: 200px;
+        max-height: 150px; /* Înălțimea maximă a imaginii */
         object-fit: cover;
     }
-</style>
 
-<div class="row">
-    <div class="col-md-12 mb-3">
-        <form method="get">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Caută..." name="searchString">
-                <button class="btn btn-outline-secondary" type="submit">Caută</button>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-12 mb-3">
-        <div class="dropdown sort-dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                Sortează
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="?sortOrder=name_asc">Sortează după nume (ascendent)</a></li>
-                <li><a class="dropdown-item" href="?sortOrder=name_desc">Sortează după nume (descendent)</a></li>
-                <li><a class="dropdown-item" href="?sortOrder=price_asc">Sortează după preț (ascendent)</a></li>
-                <li><a class="dropdown-item" href="?sortOrder=price_desc">Sortează după preț (descendent)</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
+    .card-header {
+        background-color: #17a2b8;
+    }
+
+        .card-header h5 {
+            margin-bottom: 0;
+        }
+
+    .badge {
+        margin-right: 5px;
+    }
+</style>
 
 <div class="row">
     @if (Model != null)
     {
         @foreach (var item in Model)
         {
-            <div class="col-md-4 col-xs-6 border-primary mb-3">
-                <div class="card product-card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                        <div class="col-md-12">
-                            <div class="card-header text-white bg-info">
-                                <h5 class="card-title">
-                                    @item.Denumire
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
-                                        <a class="text-white float-right" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i></a>
-                                    }
-                                </h5>
+            <div class="col-md-4 col-xs-6 mb-3">
+                <div class="card product-card">
+                    <div class="card-header text-white">
+                        <h5 class="card-title">
+                            @item.Denumire
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="text-white float-right" asp-action="Details" asp-route-id="@item.Id"><i class="bi bi-eye"></i></a>
+                            }
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <img src="@Url.Content(item.Imagine)" class="product-image" alt="@item.Denumire">
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <img src="@Url.Content(item.Imagine)" class="product-image" alt="@item.Denumire">
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card-body">
+                            <div class="col-md-6">
                                 <p class="card-text">@item.Descriere</p>
-                                <p class="card-text"><b>Utilizator </b>@item.Utilizator.Nume</p>
-                                <p class="card-text"><b>Categorie: </b>@item.Categorie</p>
-                                <p class="card-text"><b>Localitate: </b>@item.Localitate</p>
+                                <p class="card-text">Utilizator: @item.Utilizator.Nume @item.Utilizator.Prenume</p>
+                                <p class="card-text">Categorie: @item.Categorie</p>
+                                <p class="card-text">Localitate: @item.Localitate</p>
                                 <p class="card-text ">
-                                    <b>Status: </b>
                                     @if (item.Nr_buc >= 0)
                                     {
-                                        <span class="badge bg-success text-white">VALABIL</span>
+                                        <span class="badge bg-success">VALABIL</span>
                                     }
                                     else if (item.Nr_buc == 0)
                                     {
-                                        <span class="badge bg-danger text-white">NU MAI ESTE PE STOCK</span>
+                                        <span class="badge bg-danger">NU MAI ESTE PE STOCK</span>
                                     }
                                 </p>
-
                                 <form asp-controller="Order" asp-action="AddItemToShoppingCart" method="post">
                                     <div class="form-group">
                                         <label for="quantity">Cantitate:</label>
@@ -100,5 +86,4 @@
     {
         <p>No data available</p>
     }
-</div>
 </div>

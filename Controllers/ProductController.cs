@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net;
 using Microsoft.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Web;
 
 namespace Magazin_Online.Controllers
 {
@@ -73,67 +74,92 @@ namespace Magazin_Online.Controllers
         {
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(ProdusVM produsVM)
         {
-            if (ModelState.IsValid)
+            if (produsVM.ImageFile == null || produsVM.ImageFile.Length == 0)
             {
-                try
-                {
-                    if (produsVM.ImageFile == null || produsVM.ImageFile.Length == 0)
-                    {
-                        ModelState.AddModelError("", "Trebuie să încărcați o imagine.");
-                        return View(produsVM);
-                    }
-
-                    if (!produsVM.ImageFile.ContentType.ToLower().StartsWith("image/"))
-                    {
-                        ModelState.AddModelError("", "Fișierul trebuie să fie o imagine.");
-                        return View(produsVM);
-                    }
-
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(produsVM.ImageFile.FileName);
-                    var filePath = Path.Combine(_hostEnvironment.WebRootPath, "uploads", fileName);
-
-
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await produsVM.ImageFile.CopyToAsync(fileStream);
-                    }
-
-                    produsVM.Imagine = "/uploads/" + fileName;
-
-                    var produs = new Produs
-                    {
-                        Denumire = produsVM.Denumire,
-                        Categorie = produsVM.Categorie,
-                        Pret = produsVM.Pret,
-                        Descriere = produsVM.Descriere,
-                        Nr_buc = produsVM.Nr_buc,
-                        Localitate = produsVM.Localitate,
-                        Imagine = produsVM.Imagine,
-                    };
-
-                    _context.Add(produs);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Eroare la salvarea produsului: {ex.Message}");
-                }
+                ModelState.AddModelError("", "Trebuie să încărcați o imagine.");
+                return View(produsVM);
             }
 
-            return View(produsVM);
+            if (!produsVM.ImageFile.ContentType.ToLower().StartsWith("image/"))
+            {
+                ModelState.AddModelError("", "Fișierul trebuie să fie o imagine.");
+                return View(produsVM);
+            }
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(produsVM.ImageFile.FileName);
+            var filePath = Path.Combine(_hostEnvironment.WebRootPath, "uploads", fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await produsVM.ImageFile.CopyToAsync(fileStream);
+            }
+
+            produsVM.Imagine = "/uploads/" + fileName;
+
+            var produs = new Produs
+            {
+                Denumire = produsVM.Denumire,
+                Categorie = produsVM.Categorie,
+                Pret = produsVM.Pret,
+                Descriere = produsVM.Descriere,
+                Nr_buc = produsVM.Nr_buc,
+                Localitate = produsVM.Localitate,
+                Imagine = produsVM.Imagine,
+                AdminId = 1,
+                UtilizatorId = int.Parse(GetUserIdFromHttpContext())
+            };
+
+            _context.Add(produs);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
+        private string GetUserIdFromHttpContext()
+        {
+            var userIdClaim = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return userIdClaim;
+        }
 
+        //public ActionResult SaveUploadedFile()
+        //{
+        //    bool isSavedSuccessfully = true;
+        //    string fName = "";
+        //    try
+        //    {
+        //        foreach (string fileName in Request.Files)
+        //        {
+        //            HttpPostedFileBase file = Request.Files[fileName];
+        //            //Save file content goes here
+        //            fName = Guid.NewGuid().ToString(); //file.FileName;
+        //            if (file != null && file.ContentLength > 0)
+        //            {
 
+        //                var originalDirectory = new System.IO.DirectoryInfo(string.Format("{0}Images\\uploaded", Server.MapPath(@"\")));
+        //                string pathString = System.IO.Path.Combine(originalDirectory.ToString(), "imagepath");
+        //                var fileName1 = System.IO.Path.GetFileName(file.FileName);
+        //                bool isExists = System.IO.Directory.Exists(pathString);
+        //                if (!isExists)
+        //                    System.IO.Directory.CreateDirectory(pathString);
+        //                var path = string.Format("{0}\\{1}", pathString, fName);
+        //                file.SaveAs(path);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        isSavedSuccessfully = false;
+        //    }
+
+        //    if (isSavedSuccessfully)
+        //        return Json(new { Message = fName });
+        //    else
+        //        return Json(new { Message = "Error in saving file" });
+        //}
 
         public async Task<IActionResult> Details(int? id)
         {

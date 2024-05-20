@@ -30,4 +30,5 @@ namespace Magazin_Online.Data.ViewModels
         [Required(ErrorMessage = "Imaginea este obligatorie")]
         public IFormFile ImageFile { get; set; }
     }
+
 }
