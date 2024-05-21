@@ -5,27 +5,76 @@
 }
 
 <style>
-    .product-card {
-        max-width: 900px; /* Lățimea maximă a cartonașului */
+    .product-card1 {
+        max-width: 600px;
         margin-bottom: 20px;
+        transition: transform 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .product-image {
-        max-height: 150px; /* Înălțimea maximă a imaginii */
-        object-fit: cover;
-    }
-
-    .card-header {
-        background-color: #17a2b8;
-    }
-
-        .card-header h5 {
-            margin-bottom: 0;
+        .product-card1:hover {
+            transform: translateY(-10px);
         }
 
-    .badge {
-        margin-right: 5px;
+    .product-image1 {
+        height: 200px;
+        object-fit: contain;
+        width: 100%;
+        padding: 10px; /* Adaugă padding pentru spațiere */
+        background-color: #f8f9fa; /* Fundal pentru a evidenția imaginea */
+        border-bottom: 1px solid #ddd; /* Linie de separare între imagine și text */
     }
+
+    .card-header1 {
+        background-color: #17a2b8;
+        padding: 1.25rem;
+    }
+
+        .card-header1 h5 {
+            margin-bottom: 0;
+            font-size: 1.5rem;
+            color: white; /* Adăugare culoare albă pentru text */
+        }
+
+    .card-body {
+        padding: 15px;
+    }
+
+        .card-body p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+    .badge1 {
+        margin-right: 5px;
+        color: white; /* Text alb pentru status */
+    }
+
+        .badge1.bg-success {
+            background-color: #28a745;
+        }
+
+        .badge1.bg-danger {
+            background-color: #dc3545;
+        }
+
+    .card-text {
+        font-family: 'Arial', sans-serif;
+        color: #555;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
 </style>
 
 <div class="row">
@@ -34,8 +83,8 @@
         @foreach (var item in Model)
         {
             <div class="col-md-4 col-xs-6 mb-3">
-                <div class="card product-card">
-                    <div class="card-header text-white">
+                <div class="card product-card1">
+                    <div class="card-header1">
                         <h5 class="card-title">
                             @item.Denumire
                             @if (User.Identity.IsAuthenticated)
@@ -44,26 +93,24 @@
                             }
                         </h5>
                     </div>
+                    <img src="@Url.Content(item.Imagine)" class="product-image1" alt="@item.Denumire">
                     <div class="card-body">
                         <div class="row g-0">
-                            <div class="col-md-6">
-                                <img src="@Url.Content(item.Imagine)" class="product-image" alt="@item.Denumire">
-                            </div>
-                            <div class="col-md-6">
-                                <p class="card-text">@item.Descriere</p>
+                            <div class="col-md-12">
                                 <p class="card-text">Utilizator: @item.Utilizator.Nume @item.Utilizator.Prenume</p>
                                 <p class="card-text">Categorie: @item.Categorie</p>
                                 <p class="card-text">Localitate: @item.Localitate</p>
-                                <p class="card-text ">
-                                    @if (item.Nr_buc >= 0)
+                                <p class="card-text"> Status: 
+                                    @if (item.Nr_buc > 0)
                                     {
-                                        <span class="badge bg-success">VALABIL</span>
+                                        <span class="badge1 bg-success">VALABIL</span>
                                     }
                                     else if (item.Nr_buc == 0)
                                     {
-                                        <span class="badge bg-danger">NU MAI ESTE PE STOCK</span>
+                                        <span class="badge1 bg-danger">NU MAI ESTE PE STOCK</span>
                                     }
                                 </p>
+                                <p class="card-text">Descriere: @item.Descriere</p>
                                 <form asp-controller="Order" asp-action="AddItemToShoppingCart" method="post">
                                     <div class="form-group">
                                         <label for="quantity">Cantitate:</label>

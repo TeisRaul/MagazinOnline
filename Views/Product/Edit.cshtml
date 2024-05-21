@@ -1,4 +1,5 @@
-﻿@model Magazin_Online.Models.Produs
+﻿@model Magazin_Online.Data.ViewModels.ProdusVM
+@using Magazin_Online.Data.Enums
 
 @{
     ViewData["Title"] = "Edit";
@@ -19,19 +20,20 @@
                 <span asp-validation-for="Denumire" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Categorie" class="control-label"></label>
-                <select asp-for="Categorie" class="form-control"></select>
-                <span asp-validation-for="Categorie" class="text-danger"></span>
+                <label for="Categorie">Categorie:</label>
+                <select class="form-control" asp-for="Categorie" required>
+                    <option value="">Selectează categoria</option>
+                    @foreach (var categ in Enum.GetValues(typeof(CategorieProdus)))
+                    {
+                        <option value="@categ">@categ</option>
+                    }
+                </select>
+                <span class="text-danger" asp-validation-for="Categorie"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Pret" class="control-label"></label>
                 <input asp-for="Pret" class="form-control" />
                 <span asp-validation-for="Pret" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imagine" class="control-label"></label>
-                <input asp-for="Imagine" class="form-control" />
-                <span asp-validation-for="Imagine" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Descriere" class="control-label"></label>
@@ -43,31 +45,27 @@
                 <input asp-for="Nr_buc" class="form-control" />
                 <span asp-validation-for="Nr_buc" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Localitate" class="control-label"></label>
-                <select asp-for="Localitate" class="form-control"></select>
-                <span asp-validation-for="Localitate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AdminId" class="control-label"></label>
-                <select asp-for="AdminId" class="form-control" asp-items="ViewBag.AdminId"></select>
-                <span asp-validation-for="AdminId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UtilizatorId" class="control-label"></label>
-                <select asp-for="UtilizatorId" class="form-control" asp-items="ViewBag.UtilizatorId"></select>
-                <span asp-validation-for="UtilizatorId" class="text-danger"></span>
+            <div class="form-group mr-3">
+                <label asp-for="Localitate" class="control-label mr-1"></label>
+                <select asp-for="Localitate" class="form-control">
+                    <option value="">Selectează orasul</option>
+                    @foreach (var oras in Enum.GetValues(typeof(Magazin_Online.Data.Enums.Orase)))
+                    {
+                        <option value="@((int)oras)" class="form-control">@oras</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            <div>
+                <a class="btn btn-secondary " asp-action="MyProducts">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

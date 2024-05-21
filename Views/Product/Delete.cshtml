@@ -53,22 +53,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Localitate)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Admin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Admin.Password)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Utilizator)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Utilizator.Adresa)
         </dd>
     </dl>
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a class="btn btn-secondary" asp-action="MyProducts">Back to List</a>
     </form>
 </div>

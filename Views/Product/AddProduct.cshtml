@@ -5,66 +5,68 @@
     ViewData["Title"] = "Adaugă Produs";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form asp-controller="Product" asp-action="AddProduct" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="Denumire">Denumire:</label>
-        <input asp-for="Denumire" class="form-control" />
-        <span asp-validation-for="Denumire" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="Categorie">Categorie:</label>
-        <select class="form-control" asp-for="Categorie" required>
-            <option value="">Selectează categoria</option>
-            @foreach (var categ in Enum.GetValues(typeof(CategorieProdus)))
-            {
-                <option value="@categ">@categ</option>
-            }
-        </select>
-        <span class="text-danger" asp-validation-for="Categorie"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Imagine:</label>
-        <div id="drag-drop-area" class="drop-area">
-            <div id="drag-drop-text">Trageți și lăsați fișierul aici.</div>
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <form asp-controller="Product" asp-action="AddProduct" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Denumire">Denumire:</label>
+            <input asp-for="Denumire" class="form-control" />
+            <span asp-validation-for="Denumire" class="text-danger"></span>
         </div>
-        <input asp-for="ImageFile" type="file" id="file-input" name="ImageFile" class="form-control-file" style="display: none;" />
-        <div id="preview" class="preview"></div>
-        <span class="text-danger" asp-validation-for="ImageFile"></span>
-    </div>
+        <div class="form-group">
+            <label for="Categorie">Categorie:</label>
+            <select class="form-control" asp-for="Categorie" required>
+                <option value="">Selectează categoria</option>
+                @foreach (var categ in Enum.GetValues(typeof(CategorieProdus)))
+                {
+                    <option value="@categ">@categ</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="Categorie"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Descriere">Descriere:</label>
-        <textarea asp-for="Descriere" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Descriere" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label>Imagine:</label>
+            <div id="drag-drop-area" class="drop-area">
+                <div id="drag-drop-text">Trageți și lăsați fișierul aici.</div>
+            </div>
+            <input asp-for="ImageFile" type="file" id="file-input" name="ImageFile" class="form-control-file" style="display: none;" />
+            <div id="preview" class="preview"></div>
+            <span class="text-danger" asp-validation-for="ImageFile"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Nr_buc">Numărul de bucăți:</label>
-        <input asp-for="Nr_buc" class="form-control" />
-        <span asp-validation-for="Nr_buc" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Pret">Pret:</label>
-        <input asp-for="Pret" class="form-control" />
-        <span asp-validation-for="Pret" class="text-danger"></span>
-    </div>
-    <div class="form-group mb-3">
-        <label for="Oras">Oras:</label>
-        <select class="form-control" asp-for="Localitate" required>
-            <option value="">Selectează orașul</option>
-            @foreach (var oras in Enum.GetValues(typeof(Orase)))
-            {
-                <option value="@oras">@oras</option>
-            }
-        </select>
-        <span class="text-danger" asp-validation-for="Localitate"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Descriere">Descriere:</label>
+            <textarea asp-for="Descriere" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Descriere" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary" asp-controller="Product" asp-action="AddProduct">Adaugă Produs</button>
-</form>
+        <div class="form-group">
+            <label asp-for="Nr_buc">Numărul de bucăți:</label>
+            <input asp-for="Nr_buc" class="form-control" />
+            <span asp-validation-for="Nr_buc" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Pret">Pret:</label>
+            <input asp-for="Pret" class="form-control" />
+            <span asp-validation-for="Pret" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label for="Oras">Oras:</label>
+            <select class="form-control" asp-for="Localitate" required>
+                <option value="">Selectează orașul</option>
+                @foreach (var oras in Enum.GetValues(typeof(Orase)))
+                {
+                    <option value="@oras">@oras</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="Localitate"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" asp-controller="Product" asp-action="AddProduct">Adaugă Produs</button>
+    </form>
+
+</div>
 
 @section Scripts {
     <script>
@@ -79,7 +81,7 @@
                 const img = document.createElement('img');
                 img.src = reader.result;
                 img.className = 'preview-image';
-                img.style.width = '100px';  // Adjust size as needed
+                img.style.width = '100px';
                 img.setAttribute('data-name', file.name);
 
                 const deleteButton = document.createElement('button');
@@ -154,37 +156,3 @@
         });
     </script>
 }
-
-<style>
-    .drop-area {
-        border: 2px dashed #ccc;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .dragover {
-        background-color: #f0f0f0;
-    }
-
-    .preview {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .preview-image {
-        max-width: 100px;
-        max-height: 100px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    .delete-button {
-        margin-right: 5px;
-        font-size: 12px;
-        cursor: pointer;
-    }
-</style>

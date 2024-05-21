@@ -1,19 +1,13 @@
 ﻿using Magazin_Online.Data;
 using Magazin_Online.Data.ViewModels;
 using Magazin_Online.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Net;
-using Microsoft.Data.SqlClient;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Web;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Magazin_Online.Controllers
 {
@@ -65,7 +59,7 @@ namespace Magazin_Online.Controllers
         }
 
 
-        public IActionResult Detail(int id)
+        public IActionResult Detail()
         {
             return View();
         }
@@ -124,43 +118,6 @@ namespace Magazin_Online.Controllers
             var userIdClaim = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             return userIdClaim;
         }
-
-        //public ActionResult SaveUploadedFile()
-        //{
-        //    bool isSavedSuccessfully = true;
-        //    string fName = "";
-        //    try
-        //    {
-        //        foreach (string fileName in Request.Files)
-        //        {
-        //            HttpPostedFileBase file = Request.Files[fileName];
-        //            //Save file content goes here
-        //            fName = Guid.NewGuid().ToString(); //file.FileName;
-        //            if (file != null && file.ContentLength > 0)
-        //            {
-
-        //                var originalDirectory = new System.IO.DirectoryInfo(string.Format("{0}Images\\uploaded", Server.MapPath(@"\")));
-        //                string pathString = System.IO.Path.Combine(originalDirectory.ToString(), "imagepath");
-        //                var fileName1 = System.IO.Path.GetFileName(file.FileName);
-        //                bool isExists = System.IO.Directory.Exists(pathString);
-        //                if (!isExists)
-        //                    System.IO.Directory.CreateDirectory(pathString);
-        //                var path = string.Format("{0}\\{1}", pathString, fName);
-        //                file.SaveAs(path);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        isSavedSuccessfully = false;
-        //    }
-
-        //    if (isSavedSuccessfully)
-        //        return Json(new { Message = fName });
-        //    else
-        //        return Json(new { Message = "Error in saving file" });
-        //}
-
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -198,77 +155,106 @@ namespace Magazin_Online.Controllers
             return View(myProducts);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Denumire,Categorie,Pret,Imagine,Descriere,Nr_buc,Localitate")] Produs produs)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit()
         {
-            if (id != produs.Id)
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(produs);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProdusExists(produs.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UtilizatorId"] = new SelectList(_context.Utilizator, "Id", "Email", produs.UtilizatorId);
-            return View(produs);
-        }
-
-        // GET: Produs/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var produs = await _context.Produs
-                .Include(p => p.Admin)
-                .Include(p => p.Utilizator)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var produs = await _context.Produs.FirstOrDefaultAsync(p => p.UtilizatorId == int.Parse(userId));
             if (produs == null)
             {
                 return NotFound();
             }
 
-            return View(produs);
+            var editVM = new ProdusVM
+            {
+                Denumire = produs.Denumire,
+                Categorie = produs.Categorie,
+                Pret = produs.Pret,
+                Descriere = produs.Descriere,
+                Nr_buc = produs.Nr_buc,
+                Localitate = produs.Localitate,
+            };
+
+            return View(editVM);
         }
 
-        // POST: Produs/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Edit(int id, ProdusVM produsVM)
         {
-            var produs = await _context.Produs.FindAsync(id);
-            if (produs != null)
+            if (id != produsVM.Id)
             {
-                _context.Produs.Remove(produs);
+                return NotFound();
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", produsVM);
+            }
+
+            var produs = await _context.Produs.FindAsync(id);
+            if (produs == null)
+            {
+                return NotFound();
+            }
+
+            produs.Denumire = produsVM.Denumire;
+            produs.Categorie = produsVM.Categorie;
+            produs.Pret = produsVM.Pret;
+            produs.Descriere = produsVM.Descriere;
+            produs.Nr_buc = produsVM.Nr_buc;
+            produs.Localitate = produsVM.Localitate;
+
+            try
+            {
+                _context.Update(produs);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Edit));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProdusExists(produs.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         private bool ProdusExists(int id)
         {
             return _context.Produs.Any(e => e.Id == id);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
+            var produs = await _context.Produs.FindAsync(id);
+            if (produs == null)
+            {
+                return NotFound();
+            }
+
+            _context.Produs.Remove(produs);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(MyProducts));
         }
     }
 }
